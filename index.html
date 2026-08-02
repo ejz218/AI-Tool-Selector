@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lehigh AI Tool Advisor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75,400..800;100,400..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brown:#502D0E;
+  --brown-deep:#3A2008;
+  --brown-soft:#6B3F1D;
+  --paper:#FAF7F2;
+  --card:#FFFFFF;
+  --ink:#22201C;
+  --ink-soft:#5C554B;
+  --line:#E4DDD2;
+  --ok:#3E6B3A;
+  --ok-bg:#EDF3EC;
+  --lock:#9A4A2B;
+  --lock-bg:#F6ECE6;
+  --gate:#8A1F1F;
+  --gate-bg:#F9ECEC;
+  --track:#EFE9DF;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.5;
+}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+
+/* Header */
+header{
+  background:var(--brown);
+  color:#F5EFE7;
+  padding:36px 0 32px;
+  margin-bottom:36px;
+}
+header .wrap{padding-bottom:0}
+.eyebrow{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:600;
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#CBB79A;
+  margin-bottom:10px;
+}
+h1{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:800;
+  font-size:clamp(28px,4.5vw,40px);
+  line-height:1.05;
+  letter-spacing:-.01em;
+}
+header p{
+  margin-top:12px;
+  max-width:620px;
+  color:#E3D6C4;
+  font-size:14.5px;
+}
+
+/* Selectors */
+.controls{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:8px;
+}
+@media(max-width:720px){.controls{grid-template-columns:1fr}}
+.control{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:16px;
+}
+.control label{
+  display:block;
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--brown-soft);
+  margin-bottom:8px;
+}
+select{
+  width:100%;
+  font-family:'Inter',sans-serif;
+  font-size:14.5px;
+  font-weight:500;
+  padding:10px 12px;
+  border:1.5px solid var(--line);
+  border-radius:8px;
+  background:#fff;
+  color:var(--ink);
+  cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B3F1D' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+}
+select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
+.control .hint{font-size:12.5px;color:var(--ink-soft);margin-top:8px}
+
+/* Gate banner */
+.gate-banner{
+  display:none;
+  background:var(--gate-bg);
+  border:1.5px solid #E0BDBD;
+  border-left:5px solid var(--gate);
+  border-radius:10px;
+  padding:18px 20px;
+  margin:20px 0 8px;
+}
+.gate-banner.show{display:block}
+.gate-banner h3{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:700;
+  font-size:15px;
+  color:var(--gate);
+  margin-bottom:6px;
+}
+.gate-banner p{font-size:13.5px;color:#5A3030}
+.gate-banner a{color:var(--gate);font-weight:600}
+
+/* Results */
+.results-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin:32px 0 6px;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.results-head h2{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:800;
+  font-size:20px;
+  color:var(--brown-deep);
+}
+.results-head .meta{font-size:12.5px;color:var(--ink-soft)}
+.legend{
+  display:flex;
+  gap:18px;
+  font-size:12px;
+  color:var(--ink-soft);
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.dot.ok{background:var(--ok)}
+.dot.lock{background:var(--lock);background-image:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.55) 2px,rgba(255,255,255,.55) 4px)}
+.dot.gated{background:var(--gate)}
+
+/* Tool row */
+.tool{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:20px 22px;
+  margin-bottom:14px;
+  transition:border-color .15s;
+}
+.tool:hover{border-color:#C9BBA6}
+.tool.locked{background:#FCFAF7}
+.tool.gated{background:#FCF8F8;border-color:#E8D5D5}
+.tool-top{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.tool-name{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:700;
+  font-size:18px;
+  color:var(--brown-deep);
+}
+.tool-name .vendor{font-weight:400;font-size:13px;color:var(--ink-soft);margin-left:8px}
+.score{
+  font-family:'JetBrains Mono',monospace;
+  font-weight:700;
+  font-size:26px;
+  color:var(--brown-deep);
+  line-height:1;
+  white-space:nowrap;
+}
+.score .pct{font-size:15px;font-weight:500;color:var(--ink-soft)}
+.tool.locked .score{color:var(--lock)}
+.tool.gated .score{color:#B99; text-decoration:line-through; text-decoration-thickness:2px}
+
+/* Score track */
+.track{
+  height:10px;
+  background:var(--track);
+  border-radius:5px;
+  margin:12px 0 10px;
+  overflow:hidden;
+}
+.bar{
+  height:100%;
+  border-radius:5px;
+  background:var(--ok);
+  width:0;
+  transition:width .5s cubic-bezier(.2,.8,.3,1);
+}
+.tool.locked .bar{
+  background:var(--lock);
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(255,255,255,.5) 4px,rgba(255,255,255,.5) 8px);
+}
+.tool.gated .bar{background:#D8B9B9}
+
+/* Chips + detail */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:600;
+  font-size:11.5px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border-radius:20px;
+}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.chip.lock{background:var(--lock-bg);color:var(--lock)}
+.chip.gated{background:var(--gate-bg);color:var(--gate)}
+.chip.class{background:#F1EBE1;color:var(--brown-soft)}
+.tool p.why{font-size:13.5px;color:var(--ink-soft);margin-bottom:6px}
+.tool p.guard{
+  font-size:13px;
+  color:var(--ink);
+  background:#F7F3EC;
+  border-left:3px solid var(--brown-soft);
+  padding:8px 12px;
+  border-radius:0 6px 6px 0;
+  margin-top:8px;
+}
+.tool p.guard strong{color:var(--brown-deep)}
+.tool .action{
+  display:inline-block;
+  margin-top:10px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--lock);
+  text-decoration:none;
+  border-bottom:1.5px solid currentColor;
+}
+.tool .action:hover{color:var(--brown-deep)}
+
+/* Score breakdown */
+.breakdown{margin:8px 0 4px}
+.breakdown summary{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:700;
+  font-size:12.5px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--brown-soft);
+  cursor:pointer;
+  user-select:none;
+}
+.breakdown summary:hover{color:var(--brown-deep)}
+.breakdown .basis{
+  font-size:13px;
+  color:var(--ink-soft);
+  margin:10px 0;
+  font-style:italic;
+}
+.fgroup{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#FBF9F5}
+.fhead{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:10px;
+}
+.frow{display:grid;grid-template-columns:1fr 120px 34px;gap:10px;align-items:center;margin-bottom:7px;font-size:12.5px}
+.frow:last-child{margin-bottom:0}
+.fname{color:var(--ink)}
+.fw{color:var(--ink-soft);font-size:11px}
+.ftrack{height:7px;background:var(--track);border-radius:4px;overflow:hidden;display:block}
+.fbar{display:block;height:100%;background:var(--brown-soft);border-radius:4px}
+.fval{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;text-align:right;color:var(--brown-deep)}
+@media(max-width:560px){.frow{grid-template-columns:1fr 70px 30px}}
+
+/* Feedback */
+.fb{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px dashed var(--line);
+}
+.fb-q{font-size:12.5px;color:var(--ink-soft);font-weight:500}
+.fb-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.fb-actions button{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:700;
+  font-size:12px;
+  padding:6px 14px;
+  border:1.5px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:all .12s;
+}
+.fb-actions button svg{flex-shrink:0}
+.fb-actions button:hover{border-color:var(--brown-soft);color:var(--brown-deep)}
+.fb-actions button.on-up{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.fb-actions button.on-down{background:var(--lock-bg);border-color:var(--lock);color:var(--lock)}
+.fb-actions button:focus-visible{outline:2px solid var(--brown-soft);outline-offset:1px}
+.fb .tally{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11.5px;
+  color:var(--ink-soft);
+  margin-left:auto;
+}
+.fb .tally strong{color:var(--brown-deep)}
+@media(max-width:560px){
+  .fb-actions{gap:10px}
+  .fb-actions button{padding:8px 18px;font-size:13px}
+  .fb-actions button svg{width:16px;height:16px}
+  .fb .tally{margin-left:0;flex-basis:100%}
+}
+.export-row{margin-top:14px}
+.export-row button{
+  font-family:'Archivo',sans-serif;
+  font-stretch:75%;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  padding:8px 16px;
+  border:1.5px solid var(--brown-soft);
+  border-radius:8px;
+  background:#fff;
+  color:var(--brown-soft);
+  cursor:pointer;
+}
+.export-row button:hover{background:var(--brown-soft);color:#fff}
+.export-row .n{font-size:12px;color:var(--ink-soft);margin-left:10px}
+
+/* Footer note */
+.footnote{
+  margin-top:36px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  font-size:12.5px;
+  color:var(--ink-soft);
+}
+.footnote strong{color:var(--brown-deep)}
+@media (prefers-reduced-motion: reduce){.bar{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Lehigh University · Information Security · ITS</div>
+    <h1>AI Tool Advisor</h1>
+    <p>Select your role, what you want to do, and the sensitivity of the data involved. Every scored tool at Lehigh is shown, including tools not yet available to your role, so you can see what to request.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="controls">
+    <div class="control">
+      <label for="role">Your role</label>
+      <select id="role"></select>
+      <div class="hint">Determines which tools you can access today.</div>
+    </div>
+    <div class="control">
+      <label for="usecase">What you want to do</label>
+      <select id="usecase"></select>
+      <div class="hint">Drives the capability match score.</div>
+    </div>
+    <div class="control">
+      <label for="dataclass">Most sensitive data involved</label>
+      <select id="dataclass"></select>
+      <div class="hint">Hard gate. Tools below this ceiling are excluded.</div>
+    </div>
+  </div>
+
+  <div class="gate-banner" id="gateBanner">
+    <h3>Class I (Critical) data requires an Information Security consultation</h3>
+    <p>Class I is breach-notifiable information: SSNs, payment card data, protected health information, government IDs, and credential combinations. AI use involving Class I data cannot proceed on a self-service basis. Tools shown below are contractually cleared for Class I, but your specific workflow needs review first. <a href="#">Request an InfoSec consultation</a> before entering any Class I data into an AI tool.</p>
+  </div>
+
+  <div class="results-head">
+    <h2 id="resultsTitle">Recommendations</h2>
+    <div class="meta" id="resultsMeta"></div>
+  </div>
+  <div class="legend">
+    <span><span class="dot ok"></span>Available to you now</span>
+    <span><span class="dot lock"></span>At Lehigh, not your role · request access</span>
+    <span><span class="dot gated"></span>Blocked at this data classification</span>
+  </div>
+
+  <div id="results"></div>
+
+  <div class="footnote">
+    <strong>How the match score works.</strong> Each tool carries a capability profile per use case (0 to 100), blended with a data-handling fitness factor. Scores reflect the model tier and features in Lehigh's licensed configuration, not the vendor's frontier offering. Inventory and scores are maintained by the Information Security office and reviewed quarterly. Community feedback informs those reviews but never changes a published score automatically. Availability is determined by current Lehigh licensing, not by the tool's quality. Last inventory review: <span id="reviewDate">DRAFT — pending InfoSec validation</span>.
+    <div class="export-row">
+      <button type="button" id="exportBtn">Download feedback log (JSON)</button>
+      <span class="n" id="fbCount"></span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   MAINTAINED CONFIGURATION — edit this block only.
+   Owned by: Information Security (quarterly review)
+   ============================================================ */
+
+const ROLES = [
+  { id:"ugrad",  label:"Undergraduate student" },
+  { id:"grad",   label:"Graduate student" },
+  { id:"faculty",label:"Faculty" },
+  { id:"staff",  label:"Staff" },
+  { id:"researcher", label:"Researcher (funded / regulated)" }
+];
+
+/* Lehigh's 4-class framework (data.lehigh.edu/classification-data).
+   rank: higher = more sensitive. */
+const DATA_CLASSES = [
+  { id:"c4", rank:1, label:"Class IV — Public/Unrestricted (published work, campus maps, directory info)" },
+  { id:"c3", rank:2, label:"Class III — Institutional/Proprietary (internal memos, unpublished research, source code)" },
+  { id:"c2", rank:3, label:"Class II — Restricted (FERPA student records, human subjects, employment, export controlled)" },
+  { id:"c1", rank:4, label:"Class I — Critical (breach-notifiable: SSNs, payment cards, PHI, credentials)" }
+];
+
+/* Each use case defines 3 scoring factors with weights summing to 1.
+   A tool's capability score = weighted sum of its factor scores. */
+const USE_CASES = [
+  { id:"writing",  label:"Writing, editing, and summarization",
+    factors:[{n:"Prose and revision quality",w:.4},{n:"Instruction following",w:.35},{n:"Document workflow integration",w:.25}] },
+  { id:"coding",   label:"Coding and software development",
+    factors:[{n:"Code generation quality",w:.4},{n:"IDE and repo context",w:.35},{n:"Debugging and agentic tasks",w:.25}] },
+  { id:"data",     label:"Data analysis and spreadsheets",
+    factors:[{n:"Quantitative reasoning",w:.4},{n:"File and spreadsheet handling",w:.35},{n:"Visualization output",w:.25}] },
+  { id:"litreview",label:"Literature review and research synthesis",
+    factors:[{n:"Source grounding",w:.4},{n:"Citation reliability",w:.35},{n:"Large corpus handling",w:.25}] },
+  { id:"study",    label:"Studying, tutoring, and exam prep",
+    factors:[{n:"Explanation quality",w:.4},{n:"Accuracy against source material",w:.35},{n:"Practice and interactivity",w:.25}] },
+  { id:"course",   label:"Course and curriculum design",
+    factors:[{n:"Pedagogical structuring",w:.4},{n:"Content generation",w:.35},{n:"LMS and document integration",w:.25}] },
+  { id:"meetings", label:"Meeting notes and transcription",
+    factors:[{n:"Native transcription",w:.4},{n:"Summary and action items",w:.35},{n:"Platform integration",w:.25}] },
+  { id:"image",    label:"Image and media generation",
+    factors:[{n:"Output quality",w:.4},{n:"Editing control",w:.35},{n:"Licensing and IP safety",w:.25}] },
+  { id:"admin",    label:"Administrative process automation",
+    factors:[{n:"Workflow automation",w:.4},{n:"Office suite integration",w:.35},{n:"Structured output reliability",w:.25}] }
+];
+
+/* Tools.
+   roles: who has access TODAY under Lehigh licensing.
+   ceiling: highest data class rank permitted (3 = Class I OK).
+   basis: what the assessment is grounded in (licensed tier, architecture).
+   scores: per use case, THREE factor scores (0–100) matching the
+           factor order defined in USE_CASES. Judged against the
+           LEHIGH-LICENSED tier of the product, not the vendor frontier.
+   guard: the one-line guardrail shown with a recommendation.
+*/
+const TOOLS = [
+  {
+    id:"gemini",
+    name:"Google Gemini",
+    vendor:"Workspace Education Plus",
+    roles:["ugrad","grad","faculty","staff","researcher"],
+    ceiling:4,
+    basis:"Capable general model at the Education Plus tier, below Google's frontier configuration. Strong Workspace integration lifts document and admin factors.",
+    guard:"Covered under Lehigh's Google Workspace agreement. Class I use limited to approved workflows; do not paste Class I data into public Gemini (gemini.google.com) outside your Lehigh account.",
+    request:"#",
+    scores:{ writing:[84,82,86], coding:[76,72,70], data:[80,84,74], litreview:[70,66,80], study:[82,74,80], course:[76,74,82], meetings:[68,72,74], image:[78,72,84], admin:[72,70,84] }
+  },
+  {
+    id:"notebooklm",
+    name:"NotebookLM",
+    vendor:"Google, Education Plus",
+    roles:["ugrad","grad","faculty","staff","researcher"],
+    ceiling:3,
+    basis:"Source-grounded architecture: answers only from uploaded documents with citations. This beats raw model intelligence for research synthesis, and caps everything open-ended.",
+    guard:"Source-grounded only: answers come from documents you upload. Do not upload Class I data. Strong for studying from your own course materials.",
+    request:"#",
+    scores:{ writing:[58,52,72], coding:[30,28,30], data:[42,50,40], litreview:[95,88,82], study:[92,94,84], course:[70,68,78], meetings:[40,70,50], image:[5,5,15], admin:[30,30,45] }
+  },
+  {
+    id:"claude",
+    name:"Claude",
+    vendor:"Anthropic Enterprise",
+    roles:["faculty","staff","researcher"],
+    ceiling:4,
+    basis:"Frontier-tier model under the Enterprise plan. Leads on reasoning, instruction following, and long-context work. No native transcription or image generation.",
+    guard:"Enterprise plan: no training on Lehigh data. Class I use requires the InfoSec-approved workflow and project-level controls.",
+    request:"#",
+    scores:{ writing:[95,94,84], coding:[92,88,92], data:[90,82,80], litreview:[86,80,84], study:[92,84,82], course:[92,90,78], meetings:[40,88,50], image:[10,15,20], admin:[86,72,88] }
+  },
+  {
+    id:"copilot",
+    name:"Microsoft Copilot",
+    vendor:"Microsoft 365 (A3)",
+    roles:["faculty","staff"],
+    ceiling:2,
+    basis:"Mid-tier model at the A3 entitlement; the value is Office integration. Inside Word, Excel, and Outlook it outperforms its raw model quality. Outside them it does not.",
+    guard:"Use only while signed in with your Lehigh account (commercial data protection). Class III maximum: no student records or other Class II data pending contract review. Strongest inside Word, Excel, and Outlook.",
+    request:"#",
+    scores:{ writing:[72,74,92], coding:[66,68,60], data:[70,74,86], litreview:[56,52,64], study:[62,58,58], course:[60,58,76], meetings:[78,76,90], image:[55,50,62], admin:[70,72,94] }
+  },
+  {
+    id:"ghcopilot",
+    name:"GitHub Copilot",
+    vendor:"GitHub Education",
+    roles:["ugrad","grad","faculty","researcher"],
+    ceiling:2,
+    basis:"Purpose-built coding assistant living inside the editor with full repo context. Dominant for its one job; near zero transfer to any other use case.",
+    guard:"Free for verified students and faculty via GitHub Education. Do not use on repositories containing Class I or II data, including export-controlled code (ITAR/EAR is Class II).",
+    request:"#",
+    scores:{ writing:[20,20,25], coding:[94,96,88], data:[55,60,45], litreview:[10,8,12], study:[45,40,50], course:[15,12,18], meetings:[5,5,5], image:[5,5,5], admin:[40,35,45] }
+  },
+  {
+    id:"zoomai",
+    name:"Zoom AI Companion",
+    vendor:"Zoom, Lehigh tenant",
+    roles:["faculty","staff","researcher"],
+    ceiling:3,
+    basis:"Native meeting capture where the meetings already happen. Transcription and platform integration carry the score; general model quality is modest.",
+    guard:"Meeting hosts must announce AI Companion is active. Do not enable in meetings discussing Class I data.",
+    request:"#",
+    scores:{ writing:[34,36,30], coding:[5,5,5], data:[20,20,20], litreview:[15,15,15], study:[20,20,20], course:[25,25,25], meetings:[94,90,96], image:[5,5,5], admin:[42,40,50] }
+  },
+  {
+    id:"firefly",
+    name:"Adobe Firefly",
+    vendor:"Adobe Creative Cloud",
+    roles:["faculty","staff"],
+    ceiling:1,
+    basis:"Image generation trained on licensed content, so IP safety is its strongest factor for institutional materials. Class IV only pending contract review. Single-purpose by design.",
+    guard:"Commercially safe training data. Class IV (public) content only. Follow Lehigh brand guidelines for institutional materials.",
+    request:"#",
+    scores:{ writing:[5,5,5], coding:[0,0,0], data:[0,0,0], litreview:[0,0,0], study:[5,5,5], course:[28,25,38], meetings:[0,0,0], image:[92,88,95], admin:[10,8,12] }
+  }
+];
+
+/* Scoring weights: capability is dominant; data fitness rewards
+   headroom above the selected classification. */
+const WEIGHTS = { capability:0.85, dataFit:0.15 };
+
+const REVIEW_DATE = "DRAFT — pending InfoSec validation";
+
+/* Artificial Analysis snapshot.
+   Source: artificialanalysis.ai Intelligence Index (0–100 composite).
+   Refresh during quarterly inventory review, or via their free API
+   (server-side only; key must never ship in this file).
+   Values below are ILLUSTRATIVE PLACEHOLDERS — replace with current
+   index scores for the model tier in Lehigh's licensed configuration. */
+const AA_SNAPSHOT = {
+  asOf: "REPLACE — e.g. 2026-08-01",
+  models: {
+    gemini:     { model:"Gemini (licensed tier)",  index:null },
+    notebooklm: { model:"Gemini-backed",           index:null },
+    claude:     { model:"Claude (Enterprise tier)",index:null },
+    copilot:    { model:"GPT-class (M365 tier)",   index:null },
+    ghcopilot:  { model:"Multiple (Copilot)",      index:null },
+    zoomai:     { model:"Zoom federated models",   index:null },
+    firefly:    { model:"Firefly Image (non-LLM)", index:null }
+  }
+};
+
+/* ============================================================
+   Engine — no need to edit below this line.
+   ============================================================ */
+
+const $ = id => document.getElementById(id);
+
+/* ---------- Feedback ----------
+   POC behavior: votes are held in memory and aggregated per
+   tool + use case + role. If artifact persistent storage is
+   available (window.storage), votes persist across sessions
+   and aggregate across users of this artifact. Standalone
+   deployment falls back to in-memory (resets on reload) —
+   production wiring is a one-endpoint job (Apps Script,
+   Qualtrics, or a campus microservice).
+   Feedback NEVER changes the governed score. It displays as a
+   community signal and exports for the quarterly review. */
+
+let FEEDBACK = { votes: [] };   /* each: {tool,useCase,role,dataClass,score,vote,ts} */
+let MY_VOTES = {};              /* key -> 'up'|'down', this session */
+const FB_KEY = "advisor-feedback-v1";
+const hasStore = typeof window !== "undefined" && window.storage && typeof window.storage.get === "function";
+
+async function fbLoad(){
+  if(!hasStore) return;
+  try{
+    const r = await window.storage.get(FB_KEY, true);
+    if(r && r.value) FEEDBACK = JSON.parse(r.value);
+  }catch(e){ /* no data yet */ }
+}
+async function fbSave(){
+  if(!hasStore) return;
+  try{ await window.storage.set(FB_KEY, JSON.stringify(FEEDBACK), true); }
+  catch(e){ console.error("feedback save failed", e); }
+}
+
+function fbTally(toolId, ucId){
+  const v = FEEDBACK.votes.filter(x=>x.tool===toolId && x.useCase===ucId);
+  const up = v.filter(x=>x.vote==="up").length;
+  return { n:v.length, up, pct: v.length ? Math.round(up/v.length*100) : null };
+}
+
+async function fbRecord(toolId, ucId, role, dcId, score, vote, key){
+  /* one vote per rec per session; changing your vote replaces it */
+  if(MY_VOTES[key]){
+    const idx = FEEDBACK.votes.findIndex(x=>x._k===key);
+    if(idx>-1) FEEDBACK.votes.splice(idx,1);
+  }
+  MY_VOTES[key]=vote;
+  FEEDBACK.votes.push({_k:key, tool:toolId, useCase:ucId, role, dataClass:dcId, score, vote, ts:new Date().toISOString()});
+  await fbSave();
+  render();
+}
+
+function fbExport(){
+  const clean = FEEDBACK.votes.map(({_k, ...rest})=>rest);
+  const blob = new Blob([JSON.stringify({exported:new Date().toISOString(), votes:clean},null,2)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ai-advisor-feedback.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function fill(sel, items){
+  items.forEach(i=>{
+    const o=document.createElement("option");
+    o.value=i.id;o.textContent=i.label;sel.appendChild(o);
+  });
+}
+fill($("role"),ROLES);
+fill($("usecase"),USE_CASES);
+fill($("dataclass"),DATA_CLASSES);
+$("reviewDate").textContent = REVIEW_DATE;
+
+function capability(tool, ucId){
+  const uc = USE_CASES.find(u=>u.id===ucId);
+  const fs = tool.scores[ucId] ?? [0,0,0];
+  return uc.factors.reduce((sum,f,i)=>sum + fs[i]*f.w, 0);
+}
+
+function matchScore(tool, ucId, dataRank){
+  const cap = capability(tool, ucId);
+  /* dataFit: 100 if ceiling exceeds need, 85 if exact, gated handled separately */
+  const headroom = tool.ceiling - dataRank;
+  const dataFit = headroom > 0 ? 100 : 85;
+  return Math.round(cap*WEIGHTS.capability + dataFit*WEIGHTS.dataFit);
+}
+
+function render(){
+  const role = $("role").value;
+  const uc   = $("usecase").value;
+  const dc   = DATA_CLASSES.find(d=>d.id===$("dataclass").value);
+  const ucLabel = USE_CASES.find(u=>u.id===uc).label;
+  const roleLabel = ROLES.find(r=>r.id===role).label;
+
+  $("gateBanner").classList.toggle("show", dc.id==="c1");
+
+  const rows = TOOLS.map(t=>{
+    const gated = t.ceiling < dc.rank;
+    const available = t.roles.includes(role);
+    const score = matchScore(t, uc, dc.rank);
+    return {t, gated, available, score};
+  })
+  /* Sort: usable first by score, then locked by score, then gated */
+  .sort((a,b)=>{
+    const g = (a.gated?1:0)-(b.gated?1:0);
+    if(g!==0) return g;
+    return b.score-a.score;
+  });
+
+  $("resultsTitle").textContent = `Recommendations · ${ucLabel}`;
+  $("resultsMeta").textContent = `Scored for: ${roleLabel} · ${dc.label.split("—")[0].trim()}`;
+
+  const box = $("results");
+  box.innerHTML = "";
+
+  rows.forEach(r=>{
+    const {t, gated, available, score} = r;
+    const div = document.createElement("div");
+    div.className = "tool" + (gated ? " gated" : (available ? "" : " locked"));
+
+    let statusChip;
+    if(gated){
+      statusChip = `<span class="chip gated">Blocked · exceeds data ceiling</span>`;
+    } else if(available){
+      statusChip = `<span class="chip ok">Available to you</span>`;
+    } else {
+      const who = ROLES.filter(x=>t.roles.includes(x.id)).map(x=>x.label.split(" ")[0]).join(", ");
+      statusChip = `<span class="chip lock">At Lehigh · not for ${roleLabel.toLowerCase()}s</span>`;
+    }
+
+    const ceilingLabel = t.ceiling===4 ? "Class I OK (restrictions)" : t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only";
+
+    const aa = AA_SNAPSHOT.models[t.id];
+    const aaLine = (aa && aa.index !== null)
+      ? `<p class="why" style="font-size:12px">Underlying model: ${aa.model} · Artificial Analysis Intelligence Index ${aa.index}/100 (as of ${AA_SNAPSHOT.asOf})</p>`
+      : ``;
+
+    /* Score breakdown */
+    const ucDef = USE_CASES.find(u=>u.id===uc);
+    const fScores = t.scores[uc] ?? [0,0,0];
+    const headroom = t.ceiling - dc.rank;
+    const dataFitVal = gated ? 0 : (headroom > 0 ? 100 : 85);
+    const factorRows = ucDef.factors.map((f,i)=>`
+      <div class="frow">
+        <span class="fname">${f.n} <span class="fw">×${f.w.toFixed(2)}</span></span>
+        <span class="ftrack"><span class="fbar" style="width:${fScores[i]}%"></span></span>
+        <span class="fval">${fScores[i]}</span>
+      </div>`).join("");
+    const dataRow = gated ? `` : `
+      <div class="frow">
+        <span class="fname">Data-handling headroom <span class="fw">15% of total</span></span>
+        <span class="ftrack"><span class="fbar" style="width:${dataFitVal}%"></span></span>
+        <span class="fval">${dataFitVal}</span>
+      </div>`;
+    const breakdown = `
+      <details class="breakdown">
+        <summary>Why ${score}%</summary>
+        <p class="basis">${t.basis}</p>
+        <div class="fgroup">
+          <div class="fhead">Capability factors for "${ucDef.label}" (85% of total)</div>
+          ${factorRows}
+          ${dataRow}
+        </div>
+      </details>`;
+
+    const fbKey = `${t.id}|${uc}|${role}|${dc.id}`;
+    const tally = fbTally(t.id, uc);
+    const mine = MY_VOTES[fbKey];
+    const tallyHtml = tally.n
+      ? `<span class="tally"><strong>${tally.pct}%</strong> found this a good match (n=${tally.n})</span>`
+      : `<span class="tally">No feedback yet</span>`;
+    const svgUp = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h3zm0 0l4.2-7.4a1.8 1.8 0 0 1 3.3 1L13.5 8H19a2 2 0 0 1 2 2.4l-1.5 8A2 2 0 0 1 17.5 20H7"/></svg>`;
+    const svgDown = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 14V3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-3zm0 0l-4.2 7.4a1.8 1.8 0 0 1-3.3-1l1-4.4H5a2 2 0 0 1-2-2.4l1.5-8A2 2 0 0 1 6.5 4H17"/></svg>`;
+    const fbRow = gated ? `` : `
+      <div class="fb">
+        <span class="fb-q">Was this a good match for your work?</span>
+        <div class="fb-actions">
+          <button type="button" class="${mine==='up'?'on-up':''}" data-fb="up" data-key="${fbKey}" data-tool="${t.id}" data-score="${score}" aria-pressed="${mine==='up'}">${svgUp}<span>Yes</span></button>
+          <button type="button" class="${mine==='down'?'on-down':''}" data-fb="down" data-key="${fbKey}" data-tool="${t.id}" data-score="${score}" aria-pressed="${mine==='down'}">${svgDown}<span>No</span></button>
+          ${tallyHtml}
+        </div>
+      </div>`;
+
+    div.innerHTML = `
+      <div class="tool-top">
+        <div class="tool-name">${t.name}<span class="vendor">${t.vendor}</span></div>
+        <div class="score">${gated ? score : score}<span class="pct">% match</span></div>
+      </div>
+      <div class="track"><div class="bar" style="width:0"></div></div>
+      <div class="chips">
+        ${statusChip}
+        <span class="chip class">${ceilingLabel}</span>
+      </div>
+      ${aaLine}
+      ${breakdown}
+      ${ gated
+        ? `<p class="why">Scores ${score}% on capability, but Lehigh's contract with this vendor does not permit ${dc.label.split("—")[0].trim()} data. Choose a cleared tool above or remove the sensitive data from your workflow.</p>`
+        : `<p class="guard"><strong>Guardrail:</strong> ${t.guard}</p>`
+      }
+      ${ (!gated && !available)
+        ? `<p class="why">This tool is licensed at Lehigh for: ${t.roles.map(id=>ROLES.find(r=>r.id===id).label).join(", ")}. It is not currently provisioned for your role.</p>
+           <a class="action" href="${t.request}">Request access or express interest →</a>`
+        : ``
+      }
+      ${fbRow}
+    `;
+    box.appendChild(div);
+
+    div.querySelectorAll("[data-fb]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        fbRecord(btn.dataset.tool, uc, role, dc.id, Number(btn.dataset.score), btn.dataset.fb, btn.dataset.key);
+      });
+    });
+
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        div.querySelector(".bar").style.width = score + "%";
+      });
+    });
+  });
+}
+
+["role","usecase","dataclass"].forEach(id=>$(id).addEventListener("change",render));
+$("exportBtn").addEventListener("click", fbExport);
+
+const _origRender = render;
+render = function(){
+  _origRender();
+  $("fbCount").textContent = FEEDBACK.votes.length
+    ? `${FEEDBACK.votes.length} vote${FEEDBACK.votes.length===1?"":"s"} recorded${hasStore ? "" : " (this session only — POC has no backend)"}`
+    : (hasStore ? "" : "POC: votes reset on reload — production needs a one-endpoint collector");
+};
+
+(async ()=>{ await fbLoad(); render(); })();
+</script>
+</body>
+</html>
