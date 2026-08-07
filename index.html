@@ -5,28 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lehigh AI Tool Advisor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75,400..800;100,400..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
+/* Lehigh brand tokens — measured from its.lehigh.edu.
+   Headings Noto Serif; body proxima-nova (Adobe Fonts) with an Inter fallback
+   for standalone hosting. Brown/gold/beige per the university web palette. */
 :root{
-  --brown:#502D0E;
-  --brown-deep:#3A2008;
+  --brown:#502D0E;        /* --bs-secondary / --bs-link-color on its.lehigh.edu */
+  --brown-deep:#44260C;   /* --bs-link-hover-color */
   --brown-soft:#6B3F1D;
-  --paper:#FAF7F2;
+  --gold:#FFE41E;         /* --bs-primary */
+  --beige:#F5E9AD;        /* --bs-beige */
+  --paper:#F8F9FA;        /* --bs-gray-100 */
   --card:#FFFFFF;
-  --ink:#22201C;
-  --ink-soft:#5C554B;
-  --line:#E4DDD2;
-  --ok:#3E6B3A;
-  --ok-bg:#EDF3EC;
-  --lock:#9A4A2B;
-  --lock-bg:#F6ECE6;
-  --gate:#8A1F1F;
-  --gate-bg:#F9ECEC;
-  --track:#EFE9DF;
+  --ink:#15181B;          /* --bs-body-color */
+  --ink-soft:#5D6469;
+  --line:#E1E1E1;         /* --bs-border-color */
+  --ok:#256F42;           /* --bs-success, darkened for text contrast */
+  --ok-bg:#E8F2EC;
+  --lock:#A8541B;         /* --bs-warning family, darkened for text contrast */
+  --lock-bg:#FBF0E6;
+  --gate:#B81530;         /* --bs-danger, darkened for text contrast */
+  --gate-bg:#FBEAED;
+  --track:#ECEEF0;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-  font-family:'Inter',system-ui,sans-serif;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   background:var(--paper);
   color:var(--ink);
   font-size:15px;
@@ -40,11 +45,11 @@ header{
   color:#F5EFE7;
   padding:36px 0 32px;
   margin-bottom:36px;
+  border-bottom:5px solid var(--gold);
 }
 header .wrap{padding-bottom:0}
 .eyebrow{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-weight:600;
   font-size:12px;
   letter-spacing:.14em;
@@ -53,8 +58,7 @@ header .wrap{padding-bottom:0}
   margin-bottom:10px;
 }
 h1{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'Noto Serif',Georgia,serif;
   font-weight:800;
   font-size:clamp(28px,4.5vw,40px);
   line-height:1.05;
@@ -83,8 +87,7 @@ header p{
 }
 .control label{
   display:block;
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-weight:700;
   font-size:12px;
   letter-spacing:.1em;
@@ -94,7 +97,7 @@ header p{
 }
 select{
   width:100%;
-  font-family:'Inter',sans-serif;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-size:14.5px;
   font-weight:500;
   padding:10px 12px;
@@ -108,7 +111,7 @@ select{
   background-repeat:no-repeat;
   background-position:right 12px center;
 }
-select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
+select:focus{outline:3px solid var(--gold);outline-offset:1px}
 .control .hint{font-size:12.5px;color:var(--ink-soft);margin-top:8px}
 
 /* Gate banner */
@@ -123,8 +126,7 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
 }
 .gate-banner.show{display:block}
 .gate-banner h3{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'Noto Serif',Georgia,serif;
   font-weight:700;
   font-size:15px;
   color:var(--gate);
@@ -143,8 +145,7 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
   gap:8px;
 }
 .results-head h2{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'Noto Serif',Georgia,serif;
   font-weight:800;
   font-size:20px;
   color:var(--brown-deep);
@@ -184,8 +185,7 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
   flex-wrap:wrap;
 }
 .tool-name{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'Noto Serif',Georgia,serif;
   font-weight:700;
   font-size:18px;
   color:var(--brown-deep);
@@ -227,8 +227,7 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
 /* Chips + detail */
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .chip{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-weight:600;
   font-size:11.5px;
   letter-spacing:.06em;
@@ -239,13 +238,13 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
 .chip.ok{background:var(--ok-bg);color:var(--ok)}
 .chip.lock{background:var(--lock-bg);color:var(--lock)}
 .chip.gated{background:var(--gate-bg);color:var(--gate)}
-.chip.class{background:#F1EBE1;color:var(--brown-soft)}
+.chip.class{background:var(--beige);color:var(--brown-deep)}
 .tool p.why{font-size:13.5px;color:var(--ink-soft);margin-bottom:6px}
 .tool p.guard{
   font-size:13px;
   color:var(--ink);
-  background:#F7F3EC;
-  border-left:3px solid var(--brown-soft);
+  background:var(--beige);
+  border-left:3px solid var(--brown);
   padding:8px 12px;
   border-radius:0 6px 6px 0;
   margin-top:8px;
@@ -265,8 +264,7 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
 /* Score breakdown */
 .breakdown{margin:8px 0 4px}
 .breakdown summary{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-weight:700;
   font-size:12.5px;
   letter-spacing:.06em;
@@ -320,8 +318,7 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
   display:inline-flex;
   align-items:center;
   gap:6px;
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-weight:700;
   font-size:12px;
   padding:6px 14px;
@@ -352,8 +349,7 @@ select:focus{outline:2px solid var(--brown-soft);outline-offset:1px}
 }
 .export-row{margin-top:14px}
 .export-row button{
-  font-family:'Archivo',sans-serif;
-  font-stretch:75%;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-weight:700;
   font-size:12px;
   letter-spacing:.05em;
