@@ -828,15 +828,17 @@ function render(){
     const available = t.roles.includes(role);
     const canRequest = !t.eligible || t.eligible.includes(role);
     const score = matchScore(t, uc, dc.rank);
-    /* What this person can actually do with the tool today. Ordering by this
-       first means the list opens with what they can use right now — an
-       undergraduate should not have to scroll past four tools they cannot get
-       to find the ones they can. */
-    const tier = gated ? 3 : available ? 0 : canRequest ? 1 : 2;
+    /* What this person can actually obtain. Provisioned and requestable rank
+       together — if a graduate student can get Claude by asking, it belongs
+       beside the tools they already have at the same score, not below them.
+       What drops down the list is what they cannot get at all. */
+    const tier = gated ? 2 : (available || canRequest) ? 0 : 1;
     return {t, gated, available, canRequest, score, tier};
   })
   /* Tier first, then score within the tier:
-       0 available now   1 requestable   2 not for this role   3 blocked by data class */
+       0 obtainable (provisioned or requestable)
+       1 not available to this role
+       2 blocked by data classification */
   .sort((a,b)=> a.tier !== b.tier ? a.tier - b.tier : b.score - a.score);
 
   $("resultsTitle").textContent = `Recommendations · ${ucLabel}`;
