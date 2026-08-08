@@ -539,6 +539,16 @@ const USE_CASES = [
     factors:[{n:"Workflow automation",w:.4},{n:"Office suite integration",w:.35},{n:"Structured output reliability",w:.25}] }
 ];
 
+/* H.S. Lee Family Foundation gift (announced 2026-01-19) funds enhanced GenAI
+   access for graduate students and faculty. Eligible people request through the
+   service desk form; the form itself explains the selection limits. */
+const GRANT = {
+  name:"H.S. Lee Family Foundation",
+  roles:["grad","faculty"],
+  form:"https://lehigh.atlassian.net/servicedesk/customer/portal/3/group/15/create/2429",
+  note:"Graduate students and faculty can request enhanced access to this tool, funded by the H.S. Lee Family Foundation gift."
+};
+
 /* Tools.
    roles: who has access TODAY under Lehigh licensing.
    ceiling: highest DATA_CLASSES.rank permitted. Ranks run 1=Class IV (public)
@@ -564,7 +574,9 @@ const TOOLS = [
     ceiling:4,
     basis:"Capable general model at the Education Plus tier, below Google's frontier configuration. Strong Workspace integration lifts document and admin factors.",
     guard:"Covered under Lehigh's Google Workspace agreement. ANY Class I use — PHI or non-PHI — must be reviewed and approved by Information Security first, for every use case, without exception. Class I PHI is not acceptable. Never paste Lehigh data into public Gemini (gemini.google.com) outside your Lehigh account.",
-    request:"#",
+    grant:true,
+    grantNote:"Gemini Workspace Pro — an upgrade above the base Education Plus tier everyone already has — is one of the options funded by the H.S. Lee Family Foundation gift for graduate students and faculty.",
+    request:GRANT.form,
     scores:{ writing:[84,82,86], coding:[76,72,70], data:[80,84,74], litreview:[70,66,80], study:[82,74,80], course:[76,74,82], meetings:[68,72,74], image:[78,72,84], admin:[72,70,84] }
   },
   {
@@ -575,7 +587,7 @@ const TOOLS = [
     ceiling:4,
     basis:"Source-grounded architecture: answers only from uploaded documents with citations. This beats raw model intelligence for research synthesis, and caps everything open-ended. Covered by the same Lehigh agreement as Gemini.",
     guard:"Covered under Lehigh's Google Workspace agreement, in the same grouping as Gemini. ANY Class I use — PHI or non-PHI — must be reviewed by Information Security first. Source-grounded: answers come only from documents you upload.",
-    request:"#",
+    request:GRANT.form,
     scores:{ writing:[58,52,72], coding:[30,28,30], data:[42,50,40], litreview:[95,88,82], study:[92,94,84], course:[70,68,78], meetings:[40,70,50], image:[5,5,15], admin:[30,30,45] }
   },
   {
@@ -586,7 +598,9 @@ const TOOLS = [
     ceiling:2,
     basis:"Frontier-tier model under the Enterprise plan. Leads on reasoning, instruction following, and long-context work. No native transcription or image generation.",
     guard:"Enterprise plan: no training on Lehigh data. Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material.",
-    request:"#",
+    grant:true,
+    grantNote:"Enhanced Claude access is one of the options funded by the H.S. Lee Family Foundation gift for graduate students and faculty.",
+    request:GRANT.form,
     scores:{ writing:[95,94,84], coding:[92,88,92], data:[90,82,80], litreview:[86,80,84], study:[92,84,82], course:[92,90,78], meetings:[40,88,50], image:[10,15,20], admin:[86,72,88] }
   },
   {
@@ -597,7 +611,9 @@ const TOOLS = [
     ceiling:1,
     basis:"Mid-tier model at the A3 entitlement; the value is Office integration. Inside Word, Excel, and Outlook it outperforms its raw model quality. Outside them it does not.",
     guard:"UNDER EVALUATION by Information Security. Not yet approved for any confidential data — Class IV (public) only. Do not use with Class I, II, or III data until evaluation completes.",
-    request:"#",
+    grant:true,
+    grantNote:"Copilot Pro is one of the options funded by the H.S. Lee Family Foundation gift for graduate students and faculty.",
+    request:GRANT.form,
     scores:{ writing:[72,74,92], coding:[66,68,60], data:[70,74,86], litreview:[56,52,64], study:[62,58,58], course:[60,58,76], meetings:[78,76,90], image:[55,50,62], admin:[70,72,94] }
   },
   {
@@ -608,19 +624,32 @@ const TOOLS = [
     ceiling:1,
     basis:"Purpose-built coding assistant living inside the editor with full repo context. Dominant for its one job; near zero transfer to any other use case.",
     guard:"UNDER REVIEW by Information Security. Not yet approved for any confidential data — Class IV (public) only. Do not use on repositories containing Class I, II, or III data, including export-controlled code (ITAR/EAR is Class II).",
-    request:"#",
+    request:GRANT.form,
     scores:{ writing:[20,20,25], coding:[94,96,88], data:[55,60,45], litreview:[10,8,12], study:[45,40,50], course:[15,12,18], meetings:[5,5,5], image:[5,5,5], admin:[40,35,45] }
   },
   {
     id:"zoomai",
     name:"Zoom AI Companion",
     vendor:"Zoom, Lehigh tenant",
-    roles:["faculty","staff","researcher"],
+    roles:["ugrad","grad","faculty","staff","researcher"],
     ceiling:3,
     basis:"Native meeting capture where the meetings already happen. Transcription and platform integration carry the score; general model quality is modest.",
     guard:"Meeting hosts must announce AI Companion is active. Do not enable in meetings discussing Class I data.",
-    request:"#",
+    request:GRANT.form,
     scores:{ writing:[34,36,30], coding:[5,5,5], data:[20,20,20], litreview:[15,15,15], study:[20,20,20], course:[25,25,25], meetings:[94,90,96], image:[5,5,5], admin:[42,40,50] }
+  },
+  {
+    id:"chatgpt",
+    name:"OpenAI ChatGPT",
+    vendor:"OpenAI, via Lehigh grant funding",
+    roles:[],
+    ceiling:1,
+    grant:true,
+    grantNote:"ChatGPT is one of the options funded by the H.S. Lee Family Foundation gift for graduate students and faculty.",
+    basis:"Frontier-tier general model. Strong across writing, reasoning, and code. PLACEHOLDER SCORES — not yet validated by Information Security.",
+    guard:"NOT LISTED on the ITS data classification table, and that page directs you to treat unlisted services as not approved — so Class IV (public) only until Information Security lists it. Note the ITS table's \u201Call other AI tools\u201D row covers free-tier and non-centrally-purchased ChatGPT; grant-funded access is a different arrangement and needs its own classification.",
+    request:GRANT.form,
+    scores:{ writing:[92,90,78], coding:[88,82,86], data:[86,84,80], litreview:[76,68,78], study:[88,82,84], course:[86,84,74], meetings:[38,84,46], image:[80,70,60], admin:[82,74,82] }
   },
   {
     id:"keenious",
@@ -630,7 +659,7 @@ const TOOLS = [
     ceiling:1,
     basis:"Recommends related academic literature from text you are already writing, as a Word and Google Docs add-in. Narrow by design: strong for discovery, no general model capability. PLACEHOLDER SCORES — not yet validated by Information Security.",
     guard:"UNDER EVALUATION by Information Security. Not yet approved for any confidential data — Class IV (public) only. Your draft text is sent to the vendor for matching, so do not use it on unpublished or otherwise confidential writing until evaluation completes.",
-    request:"#",
+    request:GRANT.form,
     scores:{ writing:[25,22,40], coding:[5,5,5], data:[10,10,10], litreview:[88,72,70], study:[35,30,30], course:[30,25,30], meetings:[5,5,5], image:[0,0,0], admin:[10,8,10] }
   },
   {
@@ -641,7 +670,7 @@ const TOOLS = [
     ceiling:1,
     basis:"Image generation trained on licensed content, so IP safety is its strongest factor for institutional materials. Class IV only pending contract review. Single-purpose by design.",
     guard:"UNDER EVALUATION by Information Security. Not yet approved for any confidential data — Class IV (public) only. Commercially safe training data. Follow Lehigh brand guidelines for institutional materials.",
-    request:"#",
+    request:GRANT.form,
     scores:{ writing:[5,5,5], coding:[0,0,0], data:[0,0,0], litreview:[0,0,0], study:[5,5,5], course:[28,25,38], meetings:[0,0,0], image:[92,88,95], admin:[10,8,12] }
   }
 ];
@@ -792,14 +821,25 @@ function render(){
     const div = document.createElement("div");
     div.className = "tool" + (gated ? " gated" : (available ? "" : " locked"));
 
+    // A grant-eligible person isn't locked out — they request it. Saying "not
+    // for graduate students" about a tool the grant exists to give them would
+    // be actively misleading, so that case gets its own state.
+    const grantEligible = t.grant && GRANT.roles.includes(role);
+
     let statusChip;
     if(gated){
       statusChip = `<span class="chip gated">Blocked · exceeds data ceiling</span>`;
     } else if(available){
       statusChip = `<span class="chip ok">Available to you</span>`;
+    } else if(grantEligible){
+      statusChip = `<span class="chip lock">Requestable · ${GRANT.name} funded</span>`;
+    } else if(!t.roles.length){
+      // Nobody holds this by default — "At Lehigh" would overstate it.
+      statusChip = `<span class="chip lock">Not provisioned at Lehigh</span>`;
     } else {
-      const who = ROLES.filter(x=>t.roles.includes(x.id)).map(x=>x.label.split(" ")[0]).join(", ");
-      statusChip = `<span class="chip lock">At Lehigh · not for ${roleLabel.toLowerCase()}s</span>`;
+      // Role labels don't all pluralise cleanly ("staffs", "researcher (funded / regulated)s"),
+      // so refer to the role generically rather than bolting an s onto the label.
+      statusChip = `<span class="chip lock">At Lehigh · not for your role</span>`;
     }
 
     const ceilingLabel = t.ceiling===4 ? "Class I \u2014 InfoSec review required" : t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only";
@@ -872,8 +912,13 @@ function render(){
         : `<p class="guard"><strong>Guardrail:</strong> ${t.guard}</p>`
       }
       ${ (!gated && !available)
-        ? `<p class="why">This tool is licensed at Lehigh for: ${t.roles.map(id=>ROLES.find(r=>r.id===id).label).join(", ")}. It is not currently provisioned for your role.</p>
-           <a class="action" href="${t.request}">Request access or express interest →</a>`
+        ? (grantEligible
+            ? `<p class="why">${t.grantNote || GRANT.note} The request form explains what you are choosing between.</p>
+               <a class="action" href="${t.request}" target="_blank" rel="noopener">Request through the ${GRANT.name} form →</a>`
+            : `<p class="why">${t.roles.length
+                 ? `This tool is licensed at Lehigh for: ${t.roles.map(id=>ROLES.find(r=>r.id===id).label).join(", ")}. It is not currently provisioned for your role.`
+                 : `This tool is not currently provisioned for any role at Lehigh.`}</p>
+               <a class="action" href="${t.request}" target="_blank" rel="noopener">Request access or express interest →</a>`)
         : ``
       }
       ${fbRow}
