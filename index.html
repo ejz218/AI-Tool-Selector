@@ -826,15 +826,18 @@ function render(){
   const rows = TOOLS.map(t=>{
     const gated = t.ceiling < dc.rank;
     const available = t.roles.includes(role);
+    const canRequest = !t.eligible || t.eligible.includes(role);
     const score = matchScore(t, uc, dc.rank);
-    return {t, gated, available, score};
+    /* What this person can actually do with the tool today. Ordering by this
+       first means the list opens with what they can use right now — an
+       undergraduate should not have to scroll past four tools they cannot get
+       to find the ones they can. */
+    const tier = gated ? 3 : available ? 0 : canRequest ? 1 : 2;
+    return {t, gated, available, canRequest, score, tier};
   })
-  /* Sort: usable first by score, then locked by score, then gated */
-  .sort((a,b)=>{
-    const g = (a.gated?1:0)-(b.gated?1:0);
-    if(g!==0) return g;
-    return b.score-a.score;
-  });
+  /* Tier first, then score within the tier:
+       0 available now   1 requestable   2 not for this role   3 blocked by data class */
+  .sort((a,b)=> a.tier !== b.tier ? a.tier - b.tier : b.score - a.score);
 
   $("resultsTitle").textContent = `Recommendations · ${ucLabel}`;
   $("resultsMeta").textContent = `Scored for: ${roleLabel} · ${dc.label.split("—")[0].trim()}`;
@@ -843,12 +846,7 @@ function render(){
   box.innerHTML = "";
 
   rows.forEach(r=>{
-    const {t, gated, available, score} = r;
-
-    // `roles` is who has it provisioned today; `eligible` is who may obtain it
-    // by purchase or grant. A tool can have nobody in the first and several in
-    // the second. Absent an `eligible` list, anyone may ask.
-    const canRequest = !t.eligible || t.eligible.includes(role);
+    const {t, gated, available, canRequest, score} = r;
 
     const div = document.createElement("div");
     div.className = "tool" + (gated ? " gated" : available ? "" : canRequest ? " locked" : " na");
