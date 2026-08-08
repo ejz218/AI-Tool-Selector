@@ -499,13 +499,23 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
    Owned by: Information Security (quarterly review)
    ============================================================ */
 
+/* `plural` is used when listing roles in a sentence; several of these labels
+   do not take a bare "s" ("staffs", "researcher (funded / regulated)s"). */
 const ROLES = [
-  { id:"ugrad",  label:"Undergraduate student" },
-  { id:"grad",   label:"Graduate student" },
-  { id:"faculty",label:"Faculty" },
-  { id:"staff",  label:"Staff" },
-  { id:"researcher", label:"Researcher (funded / regulated)" }
+  { id:"ugrad",  label:"Undergraduate student", plural:"undergraduate students" },
+  { id:"grad",   label:"Graduate student",      plural:"graduate students" },
+  { id:"faculty",label:"Faculty",               plural:"faculty" },
+  { id:"staff",  label:"Staff",                 plural:"staff" },
+  { id:"researcher", label:"Researcher (funded / regulated)", plural:"funded and regulated researchers" }
 ];
+
+/* "a, b, and c" — reads as prose rather than a machine-joined list. */
+function roleList(ids){
+  const names = ids.map(id => ROLES.find(r => r.id === id).plural);
+  if(names.length <= 1) return names.join("");
+  if(names.length === 2) return names.join(" and ");
+  return names.slice(0,-1).join(", ") + ", and " + names[names.length-1];
+}
 
 /* Lehigh's 4-class framework (data.lehigh.edu/classification-data).
    rank: higher = more sensitive. */
@@ -587,10 +597,11 @@ const TOOLS = [
     id:"claude",
     name:"Claude",
     vendor:"Anthropic Enterprise",
-    roles:["faculty","staff","researcher"],
+    roles:[],
+    eligible:["grad","faculty","staff"],
     ceiling:2,
     basis:"Frontier-tier model under the Enterprise plan. Leads on reasoning, instruction following, and long-context work. No native transcription or image generation.",
-    guard:"Enterprise plan: no training on Lehigh data. Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material.",
+    guard:"Not provisioned automatically \u2014 faculty, staff, and graduate students purchase it, and for faculty and graduate students the H.S. Lee Family Foundation gift may cover the cost. Enterprise plan: no training on Lehigh data. Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material.",
     request:REQUEST_FORM,
     scores:{ writing:[95,94,84], coding:[92,88,92], data:[90,82,80], litreview:[86,80,84], study:[92,84,82], course:[92,90,78], meetings:[40,88,50], image:[10,15,20], admin:[86,72,88] }
   },
@@ -808,16 +819,22 @@ function render(){
     const div = document.createElement("div");
     div.className = "tool" + (gated ? " gated" : (available ? "" : " locked"));
 
+    // `roles` is who has it provisioned today; `eligible` is who may obtain it
+    // by purchase or grant. A tool can have nobody in the first and several in
+    // the second. Absent an `eligible` list, anyone may ask.
+    const canRequest = !t.eligible || t.eligible.includes(role);
+
     let statusChip;
     if(gated){
       statusChip = `<span class="chip gated">Blocked · exceeds data ceiling</span>`;
     } else if(available){
       statusChip = `<span class="chip ok">Available to you</span>`;
-    } else {
-      // Anything not already provisioned is simply requestable. Who pays —
-      // department purchase or the Lee Family Foundation gift — is settled on
-      // the request form, not here.
+    } else if(canRequest){
+      // Who pays — department purchase or the Lee Family Foundation gift — is
+      // settled on the request form, not here.
       statusChip = `<span class="chip lock">Available by request</span>`;
+    } else {
+      statusChip = `<span class="chip lock">Not available to your role</span>`;
     }
 
     const ceilingLabel = t.ceiling===4 ? "Class I \u2014 InfoSec review required" : t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only";
@@ -890,10 +907,12 @@ function render(){
         : `<p class="guard"><strong>Guardrail:</strong> ${t.guard}</p>`
       }
       ${ (!gated && !available)
-        ? `<p class="why">${t.roles.length
-               ? `Provisioned at Lehigh for: ${t.roles.map(id=>ROLES.find(r=>r.id===id).label).join(", ")}. Not currently provisioned for your role, but you can request it.`
-               : `Not provisioned by default, but you can request it.`}</p>
-           <a class="action" href="${t.request}" target="_blank" rel="noopener">Request this tool →</a>`
+        ? (canRequest
+            ? `<p class="why">${t.roles.length
+                   ? `Provisioned at Lehigh for ${roleList(t.roles)}. Not provisioned for your role, but you can request it.`
+                   : `Not provisioned automatically for anyone${t.eligible ? `, but ${roleList(t.eligible)} can obtain it` : `, but you can request it`}.`}</p>
+               <a class="action" href="${t.request}" target="_blank" rel="noopener">Request this tool →</a>`
+            : `<p class="why">Available at Lehigh to ${roleList(t.eligible)}. Not available to your role.</p>`)
         : ``
       }
       ${fbRow}
