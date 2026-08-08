@@ -592,6 +592,18 @@ const TOOLS = [
     scores:{ writing:[84,82,86], coding:[76,72,70], data:[80,84,74], litreview:[70,66,80], study:[82,74,80], course:[76,74,82], meetings:[68,72,74], image:[78,72,84], admin:[72,70,84] }
   },
   {
+    id:"geminipro",
+    name:"Google AI Pro for Education",
+    vendor:"Google, paid Pro add-on",
+    roles:[],
+    eligible:["grad","faculty","staff","researcher"],
+    ceiling:4,
+    basis:"Paid upgrade on top of the Workspace Education Plus tier everyone already has. Higher-capability models, larger context, and higher usage limits; the Workspace integration is the same, so integration-driven factors barely move while model-driven ones do. PLACEHOLDER SCORES \u2014 not yet validated by Information Security.",
+    guard:"Paid add-on purchased on top of the standard Google Gemini entitlement. Same data handling as Google Gemini under Lehigh's Workspace agreement: ANY Class I use \u2014 PHI or non-PHI \u2014 must be reviewed and approved by Information Security first, for every use case, without exception. Class I PHI is not acceptable. Never paste Lehigh data into a personal Google account.",
+    request:REQUEST_FORM,
+    scores:{ writing:[92,90,88], coding:[86,78,82], data:[88,88,80], litreview:[82,76,90], study:[90,84,84], course:[86,84,84], meetings:[72,82,76], image:[86,80,86], admin:[82,80,86] }
+  },
+  {
     id:"notebooklm",
     name:"Gemini Notebook",
     vendor:"Google, Workspace Education Plus",
@@ -703,6 +715,7 @@ const AA_SNAPSHOT = {
   asOf: "REPLACE — e.g. 2026-08-01",
   models: {
     gemini:     { model:"Gemini (licensed tier)",  index:null },
+    geminipro:  { model:"Gemini (Pro add-on tier)",index:null },
     notebooklm: { model:"Gemini-backed",           index:null },
     claude:     { model:"Claude (Enterprise tier)",index:null },
     copilot:    { model:"GPT-class (M365 tier)",   index:null },

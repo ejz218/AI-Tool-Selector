@@ -11,6 +11,7 @@ Change it in the notes column if wrong. Gating by data class applies on top of t
 ,,,,,,,,
 Tool,Vendor,Data ceiling,Undergrad,Grad,Faculty,Staff,Researcher,Your corrections / notes
 Google Gemini,Workspace Education Plus,All classes (Class I needs InfoSec review),A,A,A,A,A,
+Google AI Pro for Education,"Google, paid Pro add-on",All classes (Class I needs InfoSec review),N,R,R,R,R,
 Gemini Notebook,"Google, Workspace Education Plus",All classes (Class I needs InfoSec review),A,A,A,A,A,
 Claude,Anthropic Enterprise,Class III + IV,N,R,R,R,N,
 Microsoft Copilot,Microsoft 365 (A3),Class IV only,N,R,R,R,R,
