@@ -28,6 +28,8 @@
   --gate:#B81530;         /* --bs-danger, darkened for text contrast */
   --gate-bg:#FBEAED;
   --track:#ECEEF0;
+  --na:#5F6469;           /* not available: neutral, deliberately not amber */
+  --na-bg:#EDEFF1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{
@@ -213,6 +215,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
 .dot.ok{background:var(--ok)}
 .dot.lock{background:var(--lock);background-image:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.55) 2px,rgba(255,255,255,.55) 4px)}
+.dot.na{background:#C2C7CB}
 .dot.gated{background:var(--gate)}
 
 /* Tool row */
@@ -227,6 +230,10 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .tool:hover{border-color:#C9BBA6}
 .tool.locked{background:#FCFAF7}
 .tool.gated{background:#FCF8F8;border-color:#E8D5D5}
+.tool.na{background:#FAFBFB;border-color:#E6E8EA}
+.tool.na .tool-name,.tool.na .score{color:var(--na)}
+.tool.na .bar{background:#D3D7DA;background-image:none}
+.tool.na .tool-name .vendor{color:#8A9096}
 .tool-top{
   display:flex;
   align-items:baseline;
@@ -288,6 +295,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .chip.ok{background:var(--ok-bg);color:var(--ok)}
 .chip.lock{background:var(--lock-bg);color:var(--lock)}
 .chip.gated{background:var(--gate-bg);color:var(--gate)}
+.chip.na{background:var(--na-bg);color:var(--na)}
 .chip.class{background:var(--beige);color:var(--brown-deep)}
 .tool p.why{font-size:13.5px;color:var(--ink-soft);margin-bottom:6px}
 .tool p.guard{
@@ -477,7 +485,8 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   </div>
   <div class="legend">
     <span><span class="dot ok"></span>Available to you now</span>
-    <span><span class="dot lock"></span>At Lehigh, not your role · request access</span>
+    <span><span class="dot lock"></span>Available by request</span>
+    <span><span class="dot na"></span>Not available to your role</span>
     <span><span class="dot gated"></span>Blocked at this data classification</span>
   </div>
 
@@ -821,13 +830,14 @@ function render(){
 
   rows.forEach(r=>{
     const {t, gated, available, score} = r;
-    const div = document.createElement("div");
-    div.className = "tool" + (gated ? " gated" : (available ? "" : " locked"));
 
     // `roles` is who has it provisioned today; `eligible` is who may obtain it
     // by purchase or grant. A tool can have nobody in the first and several in
     // the second. Absent an `eligible` list, anyone may ask.
     const canRequest = !t.eligible || t.eligible.includes(role);
+
+    const div = document.createElement("div");
+    div.className = "tool" + (gated ? " gated" : available ? "" : canRequest ? " locked" : " na");
 
     let statusChip;
     if(gated){
@@ -839,7 +849,7 @@ function render(){
       // settled on the request form, not here.
       statusChip = `<span class="chip lock">Available by request</span>`;
     } else {
-      statusChip = `<span class="chip lock">Not available to your role</span>`;
+      statusChip = `<span class="chip na">Not available to your role</span>`;
     }
 
     const ceilingLabel = t.ceiling===4 ? "Class I \u2014 InfoSec review required" : t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only";
