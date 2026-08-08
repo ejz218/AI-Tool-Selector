@@ -218,6 +218,23 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .dot.na{background:#C2C7CB}
 .dot.gated{background:var(--gate)}
 
+/* Tier boundary — marks where the list stops being things you can get */
+.tier-break{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:26px 0 14px;
+  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--na);
+}
+.tier-break::after{content:"";flex:1;height:1px;background:var(--line)}
+.tier-break.gate{color:var(--gate)}
+.tier-break.gate::after{background:#E8D5D5}
+
 /* Tool row */
 .tool{
   background:var(--card);
@@ -704,6 +721,12 @@ const TOOLS = [
    headroom above the selected classification. */
 const WEIGHTS = { capability:0.85, dataFit:0.15 };
 
+/* Shown as a rule above the first tool in each non-obtainable group. */
+const TIER_BREAKS = {
+  1: { label:"Not available to your role", cls:"" },
+  2: { label:"Blocked at this data classification", cls:" gate" }
+};
+
 const REVIEW_DATE = "DRAFT — no validated review has been completed";
 
 /* Artificial Analysis snapshot.
@@ -847,8 +870,19 @@ function render(){
   const box = $("results");
   box.innerHTML = "";
 
+  let lastTier = null;
   rows.forEach(r=>{
-    const {t, gated, available, canRequest, score} = r;
+    const {t, gated, available, canRequest, score, tier} = r;
+
+    // Break whenever we drop into a group the person cannot obtain — including
+    // when the list opens on one, which is itself worth saying out loud.
+    if(tier !== lastTier && TIER_BREAKS[tier]){
+      const sep = document.createElement("div");
+      sep.className = "tier-break" + TIER_BREAKS[tier].cls;
+      sep.innerHTML = `<span>${TIER_BREAKS[tier].label}</span>`;
+      box.appendChild(sep);
+    }
+    lastTier = tier;
 
     const div = document.createElement("div");
     div.className = "tool" + (gated ? " gated" : available ? "" : canRequest ? " locked" : " na");
