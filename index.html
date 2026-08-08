@@ -320,7 +320,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .tool .action:hover{color:var(--brown-deep)}
 
 /* Score breakdown */
-.breakdown{margin:8px 0 4px}
+.breakdown{margin:4px 0 4px}
 .breakdown summary{
   font-family:'proxima-nova','Inter',system-ui,sans-serif;
   font-weight:700;
@@ -332,13 +332,14 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   user-select:none;
 }
 .breakdown summary:hover{color:var(--brown-deep)}
-.breakdown .basis{
-  font-size:13px;
+.basis{
+  font-size:14px;
+  line-height:1.6;
   color:var(--ink-soft);
-  margin:10px 0;
-  font-style:italic;
+  margin:10px 0 6px;
 }
-.fgroup{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#FBF9F5}
+.tool.na .basis{color:#7A8087}
+.fgroup{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#FBF9F5;margin-top:10px}
 .fhead{
   font-size:11px;
   font-weight:600;
@@ -621,7 +622,7 @@ const TOOLS = [
     roles:[],
     eligible:["grad","faculty","staff"],
     ceiling:2,
-    basis:"Frontier-tier model under the Enterprise plan. Leads on reasoning, instruction following, and long-context work. No native transcription or image generation.",
+    basis:"Frontier-tier model under the Enterprise plan. Leads on reasoning, instruction following, and long-context work. No native transcription or image generation. Note that the repository-aware and agentic scores here \u2014 IDE context, debugging, multi-step tasks \u2014 describe Claude Code or Cowork working against your files, not the browser chat window, which cannot read your codebase or run anything. Reaching these results may require that setup.",
     guard:"Not provisioned automatically \u2014 faculty, staff, and graduate students purchase it, and for faculty and graduate students the H.S. Lee Family Foundation gift may cover the cost. Enterprise plan: no training on Lehigh data. Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material.",
     request:REQUEST_FORM,
     scores:{ writing:[95,94,84], coding:[92,88,92], data:[90,82,80], litreview:[86,80,84], study:[92,84,82], course:[92,90,78], meetings:[40,88,50], image:[10,15,20], admin:[86,72,88] }
@@ -889,10 +890,12 @@ function render(){
         <span class="ftrack"><span class="fbar" style="width:${dataFitVal}%"></span></span>
         <span class="fval">${dataFitVal}</span>
       </div>`;
+    // The prose answer to "why" is the part people actually read, so it stays on
+    // the card. Only the arithmetic behind the number goes behind the expander.
     const breakdown = `
+      <p class="basis">${t.basis}</p>
       <details class="breakdown">
-        <summary>Why ${score}%</summary>
-        <p class="basis">${t.basis}</p>
+        <summary>How the ${score}% is calculated</summary>
         <div class="fgroup">
           <div class="fhead">Capability factors for "${ucDef.label}" (85% of total)</div>
           ${factorRows}
