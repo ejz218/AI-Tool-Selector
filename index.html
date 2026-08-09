@@ -900,7 +900,7 @@ function render(){
       statusChip = `<span class="chip na">Not available to your role</span>`;
     }
 
-    const ceilingLabel = t.ceiling===4 ? "Class I \u2014 InfoSec review required" : t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only";
+    const ceilingLabel = t.ceiling===4 ? "Class I max" : t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only";
 
     const aa = AA_SNAPSHOT.models[t.id];
     const aaLine = (aa && aa.index !== null)
