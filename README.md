@@ -6,6 +6,20 @@ Proof of concept: a governed AI tool recommender for Lehigh University students,
 
 **DRAFT — pending Information Security validation.** The tool inventory, role mappings, data classification ceilings, and all capability scores are placeholder judgments, not approved guidance. Do not treat any recommendation as authoritative until validated.
 
+## Ownership
+
+Created by Eric Zematis in his staff role at Lehigh University. **This work
+product belongs to Lehigh University.** Commit authorship records who wrote
+each change; it does not indicate personal ownership of the work.
+
+Maintained by Information Security. Licensing terms are set by Lehigh — see
+`LICENSE` once added.
+
+This repository is distinct from the AI Risk Framework
+(https://ejz218.github.io/AI_Risk_Framework.html), which is a separate personal
+educational artifact whose author retains its intellectual property. The two
+share no code.
+
 ## Design principles
 
 - Data classification is a hard gate (Lehigh 4-class framework, Class I–IV); capability never overrides contract.
