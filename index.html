@@ -5,35 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>[DRAFT] Lehigh AI Tool Advisor — not approved guidance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-/* Lehigh brand tokens — measured from its.lehigh.edu.
-   Headings Noto Serif; body proxima-nova (Adobe Fonts) with an Inter fallback
-   for standalone hosting. Brown/gold/beige per the university web palette. */
-:root{
-  --brown:#502D0E;        /* --bs-secondary / --bs-link-color on its.lehigh.edu */
-  --brown-deep:#44260C;   /* --bs-link-hover-color */
-  --brown-soft:#6B3F1D;
-  --gold:#FFE41E;         /* --bs-primary */
-  --beige:#F5E9AD;        /* --bs-beige */
-  --paper:#F8F9FA;        /* --bs-gray-100 */
-  --card:#FFFFFF;
-  --ink:#15181B;          /* --bs-body-color */
-  --ink-soft:#5D6469;
-  --line:#E1E1E1;         /* --bs-border-color */
-  --ok:#256F42;           /* --bs-success, darkened for text contrast */
-  --ok-bg:#E8F2EC;
-  --lock:#A8541B;         /* --bs-warning family, darkened for text contrast */
-  --lock-bg:#FBF0E6;
-  --gate:#B81530;         /* --bs-danger, darkened for text contrast */
-  --gate-bg:#FBEAED;
-  --track:#ECEEF0;
-  --na:#5F6469;           /* not available: neutral, deliberately not amber */
-  --na-bg:#EDEFF1;
+/* Dopis — Lehigh's licensed display face, self-hosted on lehigh.edu and served
+   with Access-Control-Allow-Origin: *, so it loads from any origin. Registered
+   with weight descriptors under one family rather than as separate weight-named
+   families: that lets font-weight resolve naturally, avoids the browser
+   synthesising bold on top of the already-bold face, and keeps the Sora
+   fallback at a matching weight. Sora is the brand's own documented substitute
+   if these legacy ~inis URLs ever move. */
+@font-face{
+  font-family:"Dopis"; font-style:normal; font-weight:400; font-display:swap;
+  src:url("https://www.lehigh.edu/~inis/fonts/Web-Dopis-Family-Pack/DopisRegular.woff2") format("woff2"),
+      url("https://www.lehigh.edu/~inis/fonts/Web-Dopis-Family-Pack/DopisRegular.woff") format("woff");
 }
+@font-face{
+  font-family:"Dopis"; font-style:normal; font-weight:700; font-display:swap;
+  src:url("https://www.lehigh.edu/~inis/fonts/Web-Dopis-Family-Pack/DopisBold.woff2") format("woff2"),
+      url("https://www.lehigh.edu/~inis/fonts/Web-Dopis-Family-Pack/DopisBold.woff") format("woff");
+}
+@font-face{
+  font-family:"Dopis Condensed"; font-style:normal; font-weight:700; font-display:swap;
+  src:url("https://www.lehigh.edu/~inis/fonts/Web-Dopis-Family-Pack/DopisCondensedBold.woff2") format("woff2"),
+      url("https://www.lehigh.edu/~inis/fonts/Web-Dopis-Family-Pack/DopisCondensedBold.woff") format("woff");
+}
+
+/* Lehigh brand system — per the official Brand Hub, not a reading of any one
+   Lehigh site's implementation. Display type is Dopis, body is Inter, and the
+   palette is limited to named brand and website-token colours. */
+:root{
+  /* Lehigh brand palette — live.standards.site/lehighbrandhub.
+     Every value below is a named brand or website-token colour; none are
+     computed tints, per the brand's rule against inventing shades. */
+  --brown:#502d0e;        /* Lehigh Brown — primary, headings */
+  --brown-deep:#502d0e;   /* headings use Lehigh Brown itself */
+  --brown-soft:#83541e;   /* Lehigh Brown 80 */
+  --gold:#ffe41e;         /* Golden Hour */
+  --beige:#f5e9ad;        /* First Light */
+  --paper:#f4f3f2;        /* Grey 20 — neutral background */
+  --card:#ffffff;         /* White */
+  --ink:#212529;          /* Base font colour — not pure black */
+  --ink-soft:#6a6764;     /* Grey K60 — secondary text */
+  --line:#e1e1e1;         /* Grey light — borders */
+  --link:#327d9a;         /* Hyperlink */
+  --ok:#0e524e;           /* Dark Teal */
+  --ok-bg:#e8f3f0;        /* Teal 20 — success tint */
+  --lock:#83541e;         /* Lehigh Brown 80 */
+  --lock-bg:#fffbe1;      /* Gold 20 */
+  --gate:#ac1d15;         /* Dark Red — danger text on light */
+  --gate-bg:#ffded5;      /* Red 20 — danger tint */
+  --na:#6a6764;           /* Grey K60 — muted body text */
+  --na-ink:#333333;       /* Grey darkest — chip text, K60 is under 4.5:1 on Grey 60 */
+  --na-bg:#e1dfda;        /* Grey 60 */
+  --track:#e1dfda;        /* Grey 60 */
+}
+
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   background:var(--paper);
   color:var(--ink);
   font-size:15px;
@@ -49,7 +78,7 @@ body{
   top:0;
   z-index:50;
   background:var(--gold);
-  color:var(--brown-deep);
+  color:var(--brown);
   border-bottom:3px solid var(--brown);
 }
 .draft-banner .wrap{
@@ -60,7 +89,7 @@ body{
   flex-wrap:wrap;
 }
 .draft-tag{
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-weight:700;
   font-size:12.5px;
   letter-spacing:.16em;
@@ -72,8 +101,8 @@ body{
   flex:0 0 auto;
 }
 .draft-banner p{font-size:13.5px;font-weight:600;line-height:1.45}
-.draft-banner a{color:var(--brown-deep);font-weight:700;text-underline-offset:2px}
-.draft-banner a:hover{color:#2E1A08}
+.draft-banner a{color:var(--brown);font-weight:700;text-underline-offset:2px}
+.draft-banner a:hover{color:var(--brown)}
 .draft-watermark{
   position:fixed;
   inset:0;
@@ -90,24 +119,24 @@ body{
 /* Header */
 header{
   background:var(--brown);
-  color:#F5EFE7;
+  color:#ffffff;
   padding:36px 0 32px;
   margin-bottom:36px;
   border-bottom:5px solid var(--gold);
 }
 header .wrap{padding-bottom:0}
 .eyebrow{
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
-  font-weight:600;
-  font-size:12px;
+  font-family:"Dopis Condensed","Barlow Condensed","Sora",sans-serif;
+  font-weight:700;
+  font-size:13px;
   letter-spacing:.14em;
   text-transform:uppercase;
-  color:#CBB79A;
+  color:#dec8b2;
   margin-bottom:10px;
 }
 h1{
-  font-family:'Noto Serif',Georgia,serif;
-  font-weight:800;
+  font-family:"Dopis","Sora",sans-serif;
+  font-weight:700;
   font-size:clamp(28px,4.5vw,40px);
   line-height:1.05;
   letter-spacing:-.01em;
@@ -115,7 +144,7 @@ h1{
 header p{
   margin-top:12px;
   max-width:620px;
-  color:#E3D6C4;
+  color:#dec8b2;
   font-size:14.5px;
 }
 
@@ -135,7 +164,7 @@ header p{
 }
 .control label{
   display:block;
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-weight:700;
   font-size:12px;
   letter-spacing:.1em;
@@ -145,7 +174,7 @@ header p{
 }
 select{
   width:100%;
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-size:14.5px;
   font-weight:500;
   padding:10px 12px;
@@ -170,7 +199,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .gate-banner{
   display:none;
   background:var(--gate-bg);
-  border:1.5px solid #E0BDBD;
+  border:1.5px solid #fa9d88;
   border-left:5px solid var(--gate);
   border-radius:10px;
   padding:18px 20px;
@@ -178,13 +207,13 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 }
 .gate-banner.show{display:block}
 .gate-banner h3{
-  font-family:'Noto Serif',Georgia,serif;
+  font-family:"Dopis","Sora",sans-serif;
   font-weight:700;
   font-size:15px;
   color:var(--gate);
   margin-bottom:6px;
 }
-.gate-banner p{font-size:13.5px;color:#5A3030}
+.gate-banner p{font-size:13.5px;color:var(--ink)}
 .gate-banner a{color:var(--gate);font-weight:600}
 
 /* Results */
@@ -197,8 +226,8 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   gap:8px;
 }
 .results-head h2{
-  font-family:'Noto Serif',Georgia,serif;
-  font-weight:800;
+  font-family:"Dopis","Sora",sans-serif;
+  font-weight:700;
   font-size:20px;
   color:var(--brown-deep);
 }
@@ -215,7 +244,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
 .dot.ok{background:var(--ok)}
 .dot.lock{background:var(--lock);background-image:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.55) 2px,rgba(255,255,255,.55) 4px)}
-.dot.na{background:#C2C7CB}
+.dot.na{background:#d0cac2}
 .dot.gated{background:var(--gate)}
 
 /* Tier boundary — marks where the list stops being things you can get */
@@ -224,7 +253,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   align-items:center;
   gap:12px;
   margin:26px 0 14px;
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-size:12px;
   font-weight:700;
   letter-spacing:.09em;
@@ -244,13 +273,13 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   margin-bottom:14px;
   transition:border-color .15s;
 }
-.tool:hover{border-color:#C9BBA6}
-.tool.locked{background:#FCFAF7}
-.tool.gated{background:#FCF8F8;border-color:#E8D5D5}
-.tool.na{background:#FAFBFB;border-color:#E6E8EA}
+.tool:hover{border-color:#dec8b2}
+.tool.locked{background:#f6f4f2}
+.tool.gated{background:var(--card);border-color:#ffded5}
+.tool.na{background:var(--paper);border-color:#e1dfda}
 .tool.na .tool-name,.tool.na .score{color:var(--na)}
-.tool.na .bar{background:#D3D7DA;background-image:none}
-.tool.na .tool-name .vendor{color:#8A9096}
+.tool.na .bar{background:#d0cac2;background-image:none}
+.tool.na .tool-name .vendor{color:#ada8a2}
 .tool-top{
   display:flex;
   align-items:baseline;
@@ -259,15 +288,16 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   flex-wrap:wrap;
 }
 .tool-name{
-  font-family:'Noto Serif',Georgia,serif;
+  font-family:"Dopis","Sora",sans-serif;
   font-weight:700;
   font-size:18px;
   color:var(--brown-deep);
 }
 .tool-name .vendor{font-weight:400;font-size:13px;color:var(--ink-soft);margin-left:8px}
 .score{
-  font-family:'JetBrains Mono',monospace;
+  font-family:"Dopis","Sora",sans-serif;
   font-weight:700;
+  font-variant-numeric:tabular-nums;
   font-size:26px;
   color:var(--brown-deep);
   line-height:1;
@@ -275,7 +305,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 }
 .score .pct{font-size:15px;font-weight:500;color:var(--ink-soft)}
 .tool.locked .score{color:var(--lock)}
-.tool.gated .score{color:#B99; text-decoration:line-through; text-decoration-thickness:2px}
+.tool.gated .score{color:#ada8a2; text-decoration:line-through; text-decoration-thickness:2px}
 
 /* Score track */
 .track{
@@ -296,12 +326,12 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   background:var(--lock);
   background-image:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(255,255,255,.5) 4px,rgba(255,255,255,.5) 8px);
 }
-.tool.gated .bar{background:#D8B9B9}
+.tool.gated .bar{background:#d0cac2}
 
 /* Chips + detail */
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .chip{
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-weight:600;
   font-size:11.5px;
   letter-spacing:.06em;
@@ -312,7 +342,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .chip.ok{background:var(--ok-bg);color:var(--ok)}
 .chip.lock{background:var(--lock-bg);color:var(--lock)}
 .chip.gated{background:var(--gate-bg);color:var(--gate)}
-.chip.na{background:var(--na-bg);color:var(--na)}
+.chip.na{background:var(--na-bg);color:var(--na-ink)}
 .chip.class{background:var(--beige);color:var(--brown-deep)}
 .tool p.why{font-size:13.5px;color:var(--ink-soft);margin-bottom:6px}
 .tool p.guard{
@@ -339,7 +369,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 /* Score breakdown */
 .breakdown{margin:4px 0 4px}
 .breakdown summary{
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-weight:700;
   font-size:12.5px;
   letter-spacing:.06em;
@@ -355,7 +385,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   color:var(--ink-soft);
   margin:10px 0 6px;
 }
-.tool.na .basis{color:#7A8087}
+.tool.na .basis{color:var(--na)}
 .fgroup{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#FBF9F5;margin-top:10px}
 .fhead{
   font-size:11px;
@@ -371,7 +401,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .fw{color:var(--ink-soft);font-size:11px}
 .ftrack{height:7px;background:var(--track);border-radius:4px;overflow:hidden;display:block}
 .fbar{display:block;height:100%;background:var(--brown-soft);border-radius:4px}
-.fval{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;text-align:right;color:var(--brown-deep)}
+.fval{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums;font-weight:700;font-size:12px;text-align:right;color:var(--brown-deep)}
 @media(max-width:560px){.frow{grid-template-columns:1fr 70px 30px}}
 
 /* Feedback */
@@ -394,7 +424,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
   display:inline-flex;
   align-items:center;
   gap:6px;
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-weight:700;
   font-size:12px;
   padding:6px 14px;
@@ -411,7 +441,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 .fb-actions button.on-down{background:var(--lock-bg);border-color:var(--lock);color:var(--lock)}
 .fb-actions button:focus-visible{outline:2px solid var(--brown-soft);outline-offset:1px}
 .fb .tally{
-  font-family:'JetBrains Mono',monospace;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums;
   font-size:11.5px;
   color:var(--ink-soft);
   margin-left:auto;
@@ -425,7 +455,7 @@ select:focus{outline:3px solid var(--brown);outline-offset:2px}
 }
 .export-row{margin-top:14px}
 .export-row button{
-  font-family:'proxima-nova','Inter',system-ui,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   font-weight:700;
   font-size:12px;
   letter-spacing:.05em;
