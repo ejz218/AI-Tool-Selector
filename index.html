@@ -900,7 +900,10 @@ function render(){
       statusChip = `<span class="chip na">Not available to your role</span>`;
     }
 
-    const ceilingLabel = t.ceiling===4 ? "Class I \u2014 InfoSec review required" : t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only";
+    // Class I carries no chip: the gate banner above the results already states
+    // the InfoSec review requirement, and a per-card badge read as a stamp of
+    // approval rather than the caveat it was meant to be.
+    const ceilingChip = t.ceiling===4 ? `` : `<span class="chip class">${t.ceiling===3 ? "Class II max" : t.ceiling===2 ? "Class III max" : "Class IV only"}</span>`;
 
     const aa = AA_SNAPSHOT.models[t.id];
     const aaLine = (aa && aa.index !== null)
@@ -963,7 +966,7 @@ function render(){
       <div class="track"><div class="bar" style="width:0"></div></div>
       <div class="chips">
         ${statusChip}
-        <span class="chip class">${ceilingLabel}</span>
+        ${ceilingChip}
       </div>
       ${aaLine}
       ${breakdown}
