@@ -738,9 +738,9 @@ const TOOLS = [
     vendor:"Microsoft 365 (A3)",
     roles:[],
     eligible:["grad","faculty","staff","researcher"],
-    ceiling:1,
+    ceiling:2,
     basis:"Mid-tier model at the A3 entitlement; the value is Office integration. Inside Word, Excel, and Outlook it outperforms its raw model quality. Outside them it does not.",
-    guard:"UNDER EVALUATION by Information Security. Not yet approved for any confidential data — Class IV (public) only. Do not use with Class I, II, or III data until evaluation completes.",
+    guard:"Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material. Use only while signed in with your Lehigh account so commercial data protection applies. Strongest inside Word, Excel and Outlook; outside the Office apps its raw model quality is mid-tier.",
     request:REQUEST_FORM,
     scores:{ writing:[72,74,92], coding:[66,68,60], data:[70,74,86], litreview:[56,52,64], study:[62,58,58], course:[60,58,76], meetings:[78,76,90], image:[55,50,62], admin:[70,72,94] }
   },
@@ -769,15 +769,15 @@ const TOOLS = [
   },
   {
     id:"chatgpt",
-    name:"OpenAI ChatGPT",
-    vendor:"OpenAI, purchased through Lehigh",
+    name:"ChatGPT Business",
+    vendor:"OpenAI Business tier, purchased through Lehigh",
     roles:[],
     eligible:["grad","faculty","staff","researcher"],
     ceiling:2,
-    basis:"Frontier-tier general model. Strong across writing, reasoning, and code. PLACEHOLDER SCORES — not yet validated by Information Security.",
-    guard:"Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material. This covers the account purchased through Lehigh \u2014 ChatGPT used through a free tier or a personal account falls under the table's \u201Call other AI tools\u201D row instead and is Class IV only, so which account you are signed into decides what you may put in it.",
+    basis:"Frontier-tier general model on the Business tier. Beyond chat, the plan bundles three things that move its scores: Codex, a repository-aware coding agent, so the IDE-context and agentic factors describe real file and repo work rather than pasting snippets into a chat window; connectors to Microsoft 365, Google Drive, Slack, GitHub, Linear and Figma, which is why the document, spreadsheet and workflow factors are higher than a bare model would earn; and custom team agent plugins built on shared company knowledge. Administratively it is a managed workspace \u2014 SAML SSO, MFA, centralised billing, usage analytics and spend controls, and no training on Lehigh data by default. Information Security has reviewed it and listed it on the ITS classification table. That classification is approved; the capability scores below are still placeholder judgments and are not.",
+    guard:"Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material. No training on Lehigh data by default on this tier. Two cautions specific to what Business adds: connectors reach into Microsoft 365, Google Drive, Slack and GitHub, so a connected source can pull in data above Class III without you pasting it, and Codex operates on repository contents \u2014 do not point it at export-controlled code, which is Class II. This covers the account purchased through Lehigh; ChatGPT through a free tier or a personal account falls under the table's \u201Call other AI tools\u201D row instead and is Class IV only, so which account you are signed into decides what you may put in it.",
     request:REQUEST_FORM,
-    scores:{ writing:[92,90,78], coding:[88,82,86], data:[86,84,80], litreview:[76,68,78], study:[88,82,84], course:[86,84,74], meetings:[38,84,46], image:[80,70,60], admin:[82,74,82] }
+    scores:{ writing:[92,90,84], coding:[90,88,90], data:[88,88,84], litreview:[82,74,84], study:[88,84,86], course:[86,84,80], meetings:[38,84,48], image:[84,74,60], admin:[90,84,84] }
   },
   {
     id:"keenious",
