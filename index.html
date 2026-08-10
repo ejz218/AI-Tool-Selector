@@ -555,13 +555,12 @@
    ============================================================ */
 
 /* `plural` is used when listing roles in a sentence; several of these labels
-   do not take a bare "s" ("staffs", "researcher (funded / regulated)s"). */
+   do not take a bare "s" ("staffs"). */
 const ROLES = [
   { id:"ugrad",  label:"Undergraduate student", plural:"undergraduate students" },
   { id:"grad",   label:"Graduate student",      plural:"graduate students" },
   { id:"faculty",label:"Faculty",               plural:"faculty" },
-  { id:"staff",  label:"Staff",                 plural:"staff" },
-  { id:"researcher", label:"Researcher (funded / regulated)", plural:"funded and regulated researchers" }
+  { id:"staff",  label:"Staff",                 plural:"staff" }
 ];
 
 /* "a, b, and c" — reads as prose rather than a machine-joined list. */
@@ -630,7 +629,7 @@ const TOOLS = [
     id:"gemini",
     name:"Google Gemini",
     vendor:"Workspace Education Plus",
-    roles:["ugrad","grad","faculty","staff","researcher"],
+    roles:["ugrad","grad","faculty","staff"],
     ceiling:4,
     basis:"Capable general model at the Education Plus tier, below Google's frontier configuration. Strong Workspace integration lifts document and admin factors. The entitlement also covers Deep Research, which runs a multi-step search and returns a cited report rather than a single answer, plus image generation, Gems (custom assistants built on your own instructions and files), and AI Studio \u2014 the ITS classification table groups all of these under the same Lehigh agreement. Worth knowing where the line falls: generating images from the Gemini app is available to everyone, while generating them inside Docs and Slides is part of the paid AI Pro add-on.",
     guard:"Covered under Lehigh's Google Workspace agreement. ANY Class I use — PHI or non-PHI — must be reviewed and approved by Information Security first, for every use case, without exception. Class I PHI is not acceptable. Never paste Lehigh data into public Gemini (gemini.google.com) outside your Lehigh account.",
@@ -642,7 +641,7 @@ const TOOLS = [
     name:"Google Gemini AI Pro for Education",
     vendor:"Google, paid add-on to Workspace for Education",
     roles:[],
-    eligible:["grad","faculty","staff","researcher"],
+    eligible:["grad","faculty","staff"],
     ceiling:4,
     basis:"Puts Gemini inside the Workspace apps themselves: Meet (take notes for me, speech translation, studio audio and lighting), Gmail, Docs (side panel, proofread, summarize), Sheets (AI function, Enhanced Smart Fill), Slides, and Vids \u2014 plus much higher usage limits and expanded Gemini Notebook access. The Gemini app is already a core service for every Education user, so the gain is integration and headroom rather than a different model. Scores therefore move on the integration factors, not the raw-capability ones. Information Security has reviewed this add-on and listed it on the ITS classification table at the same level as Google Gemini. That classification is approved; the capability scores below are still placeholder judgments and are not.",
     guard:"Paid add-on purchased on top of the standard Google Gemini entitlement, listed on the ITS classification table in its own right. Same data handling as Google Gemini under Lehigh's Workspace agreement: ANY Class I use \u2014 PHI or non-PHI \u2014 must be reviewed and approved by Information Security first, for every use case, without exception. Class I PHI is not acceptable. Never paste Lehigh data into a personal Google account.",
@@ -653,7 +652,7 @@ const TOOLS = [
     id:"notebooklm",
     name:"Gemini Notebook",
     vendor:"Google, Workspace Education Plus",
-    roles:["ugrad","grad","faculty","staff","researcher"],
+    roles:["ugrad","grad","faculty","staff"],
     ceiling:4,
     basis:"Source-grounded architecture: answers only from uploaded documents with citations. This beats raw model intelligence for research synthesis, and caps everything open-ended. Audio and Video Overviews turn the sources you have uploaded into a narrated discussion or a short explainer video, which is a genuinely different way to review dense material \u2014 and because both are built only from your own documents, they inherit the same source grounding as the answers. Covered by the same Lehigh agreement as Gemini.",
     guard:"Covered under Lehigh's Google Workspace agreement, in the same grouping as Gemini. ANY Class I use — PHI or non-PHI — must be reviewed by Information Security first. Source-grounded: answers come only from documents you upload.",
@@ -677,7 +676,7 @@ const TOOLS = [
     name:"Microsoft Copilot",
     vendor:"Microsoft 365 (A3)",
     roles:[],
-    eligible:["grad","faculty","staff","researcher"],
+    eligible:["grad","faculty","staff"],
     ceiling:2,
     basis:"Mid-tier model at the A3 entitlement; the value is Office integration. Inside Word, Excel, and Outlook it outperforms its raw model quality. Outside them it does not.",
     guard:"Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material. Use only while signed in with your Lehigh account so commercial data protection applies. Strongest inside Word, Excel and Outlook; outside the Office apps its raw model quality is mid-tier.",
@@ -688,8 +687,8 @@ const TOOLS = [
     id:"ghcopilot",
     name:"GitHub Copilot",
     vendor:"GitHub Education",
-    roles:["ugrad","grad","faculty","researcher"],
-    eligible:["ugrad","grad","faculty","researcher"],
+    roles:["ugrad","grad","faculty"],
+    eligible:["ugrad","grad","faculty"],
     ceiling:1,
     basis:"Purpose-built coding assistant living inside the editor with full repo context. Dominant for its one job; near zero transfer to any other use case.",
     guard:"UNDER REVIEW by Information Security. Not yet approved for any confidential data — Class IV (public) only. Do not use on repositories containing Class I, II, or III data, including export-controlled code (ITAR/EAR is Class II).",
@@ -700,7 +699,7 @@ const TOOLS = [
     id:"zoomai",
     name:"Zoom AI Companion",
     vendor:"Zoom, Lehigh tenant",
-    roles:["ugrad","grad","faculty","staff","researcher"],
+    roles:["ugrad","grad","faculty","staff"],
     ceiling:3,
     basis:"Native meeting capture where the meetings already happen. Transcription and platform integration carry the score; general model quality is modest.",
     guard:"Meeting hosts must announce AI Companion is active. Do not enable in meetings discussing Class I data.",
@@ -712,7 +711,7 @@ const TOOLS = [
     name:"ChatGPT Business",
     vendor:"OpenAI Business tier, purchased through Lehigh",
     roles:[],
-    eligible:["grad","faculty","staff","researcher"],
+    eligible:["grad","faculty","staff"],
     ceiling:2,
     basis:"Frontier-tier general model on the Business tier. Beyond chat, the plan bundles three things that move its scores: Codex, a repository-aware coding agent, so the IDE-context and agentic factors describe real file and repo work rather than pasting snippets into a chat window; connectors to Microsoft 365, Google Drive, Slack, GitHub, Linear and Figma, which is why the document, spreadsheet and workflow factors are higher than a bare model would earn; and custom team agent plugins built on shared company knowledge. Administratively it is a managed workspace \u2014 SAML SSO, MFA, centralised billing, usage analytics and spend controls, and no training on Lehigh data by default. Information Security has reviewed it and listed it on the ITS classification table. That classification is approved; the capability scores below are still placeholder judgments and are not.",
     guard:"Approved for Class III and Class IV only. Do not enter Class I or Class II data, including FERPA student records, human subjects data, or export-controlled material. No training on Lehigh data by default on this tier. Two cautions specific to what Business adds: connectors reach into Microsoft 365, Google Drive, Slack and GitHub, so a connected source can pull in data above Class III without you pasting it, and Codex operates on repository contents \u2014 do not point it at export-controlled code, which is Class II. This covers the account purchased through Lehigh; ChatGPT through a free tier or a personal account falls under the table's \u201Call other AI tools\u201D row instead and is Class IV only, so which account you are signed into decides what you may put in it.",
@@ -723,8 +722,8 @@ const TOOLS = [
     id:"keenious",
     name:"Keenious",
     vendor:"Keenious, research discovery",
-    roles:["ugrad","grad","faculty","researcher"],
-    eligible:["ugrad","grad","faculty","researcher"],
+    roles:["ugrad","grad","faculty"],
+    eligible:["ugrad","grad","faculty"],
     ceiling:1,
     basis:"Recommends related academic literature from text you are already writing, as a Word and Google Docs add-in. Narrow by design: strong for discovery, no general model capability. PLACEHOLDER SCORES — not yet validated by Information Security.",
     guard:"UNDER EVALUATION by Information Security. Not yet approved for any confidential data — Class IV (public) only. Your draft text is sent to the vendor for matching, so do not use it on unpublished or otherwise confidential writing until evaluation completes.",
@@ -736,7 +735,7 @@ const TOOLS = [
     name:"Adobe Firefly",
     vendor:"Adobe Creative Cloud",
     roles:[],
-    eligible:["grad","faculty","staff","researcher"],
+    eligible:["grad","faculty","staff"],
     ceiling:1,
     basis:"Image generation trained on licensed content, so IP safety is its strongest factor for institutional materials. Class IV only pending contract review. Single-purpose by design.",
     guard:"UNDER EVALUATION by Information Security. Not yet approved for any confidential data — Class IV (public) only. Commercially safe training data. Follow Lehigh brand guidelines for institutional materials.",

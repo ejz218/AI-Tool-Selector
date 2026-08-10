@@ -135,11 +135,25 @@ nothing else changes.
   specificity, so an unprefixed inner selector loses to the scoped base rule and
   silently never applies.
 
+### Seeing all four availability states
+
+No single role/class combination shows all four at once — check two:
+
+| View | States shown |
+|---|---|
+| **Staff / Class IV** | available, requestable, not available to your role |
+| **Staff / Class III** | available, requestable, blocked at this data classification |
+
+Staff is the useful role because it is the only one both excluded from something
+(GitHub Copilot, Keenious) and eligible for the purchased tools. Those two
+excluded tools are Class IV only, so at Class III they read as *blocked* rather
+than *not available* — which is why the fourth state needs the second view.
+
 ## Accessibility
 
 - **Control changes are announced.** `#luadv-resultsMeta` is a polite live region
-  reporting the scoring context and counts, e.g. *"Scored for: Researcher ·
-  Class III — 5 tools you can obtain, 4 blocked at this data classification."*
+  reporting the scoring context and counts, e.g. *"Scored for: Staff · Class III
+  — 7 tools you can obtain, 3 blocked at this data classification."*
   Without it, changing a control silently rewrites ten cards.
 - **Navigable by heading**, with no skipped levels: page title, then the Class I
   alert and the recommendations heading, then a heading per availability group,
