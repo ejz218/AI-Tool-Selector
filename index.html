@@ -59,8 +59,6 @@
   --link:#327d9a;         /* Hyperlink */
   --ok:#0e524e;           /* Dark Teal */
   --ok-bg:#e8f3f0;        /* Teal 20 — success tint */
-  --down:#83541e;         /* Lehigh Brown 80 — selected thumbs-down vote */
-  --down-bg:#fffbe1;      /* Gold 20 — selected thumbs-down vote */
   --gate:#ac1d15;         /* Dark Red — danger text on light */
   --gate-bg:#ffded5;      /* Red 20 — danger tint */
   --na:#6a6764;           /* Grey K60 — muted body text */
@@ -93,8 +91,8 @@
 .lu-advisor .breakdown summary{min-height:44px;display:flex;align-items:center}
 .lu-advisor select{min-height:44px}
 .lu-advisor .tool .action{min-height:44px;box-sizing:border-box}
-.lu-advisor .fb-actions button{min-height:44px}
-.lu-advisor .export-row button{min-height:44px}
+
+
 
 .lu-advisor .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
 
@@ -454,23 +452,8 @@
 .lu-advisor .fval{font-family:"Inter","proxima-nova",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums;font-weight:700;font-size:12px;text-align:right;color:var(--brown-deep)}
 @container (max-width:560px){.lu-advisor .frow{grid-template-columns:1fr 70px 30px}}
 
-/* Feedback */
-.lu-advisor .fb{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-top:12px;
-  padding-top:12px;
-  border-top:1px dashed var(--line);
-}
-.lu-advisor .fb-q{font-size:12.5px;color:var(--ink-soft);font-weight:500}
-.lu-advisor .fb-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.lu-advisor .fb-actions button{
+
+
   display:inline-flex;
   align-items:center;
   gap:6px;
@@ -485,40 +468,8 @@
   cursor:pointer;
   transition:all .12s;
 }
-.lu-advisor .fb-actions button svg{flex-shrink:0}
-.lu-advisor .fb-actions button:hover{border-color:var(--brown-soft);color:var(--brown-deep)}
-.lu-advisor .fb-actions button.on-up{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
-.lu-advisor .fb-actions button.on-down{background:var(--down-bg);border-color:var(--down);color:var(--down)}
-.lu-advisor .fb-actions button:focus-visible{outline:2px solid var(--brown-soft);outline-offset:1px}
-.lu-advisor .fb .tally{
-  font-family:"Inter","proxima-nova",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums;
-  font-size:11.5px;
-  color:var(--ink-soft);
-  margin-left:auto;
-}
-.lu-advisor .fb .tally strong{color:var(--brown-deep)}
-@container (max-width:560px){
-  .lu-advisor .fb-actions{gap:10px}
-  .lu-advisor .fb-actions button{padding:8px 18px;font-size:13px}
-  .lu-advisor .fb-actions button svg{width:16px;height:16px}
-  .lu-advisor .fb .tally{margin-left:0;flex-basis:100%}
-}
-.lu-advisor .export-row{margin-top:14px}
-.lu-advisor .export-row button{
-  font-family:"Inter","proxima-nova",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  font-weight:700;
-  font-size:12px;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  padding:8px 16px;
-  border:1.5px solid var(--brown-soft);
-  border-radius:8px;
-  background:#fff;
-  color:var(--brown-soft);
-  cursor:pointer;
-}
-.lu-advisor .export-row button:hover{background:var(--brown-soft);color:#fff}
-.lu-advisor .export-row .n{font-size:12px;color:var(--ink-soft);margin-left:10px}
+
+
 
 /* Footer note */
 .lu-advisor .footnote{
@@ -592,11 +543,7 @@
   <div id="luadv-results" role="region" aria-label="Tool recommendations"></div>
 
   <div class="footnote">
-    <strong>How the match score works.</strong> Each tool carries a capability profile per use case (0 to 100), blended with a data-handling fitness factor. Scores reflect the model tier and features in Lehigh's licensed configuration, not the vendor's frontier offering. Inventory and scores are maintained by the Information Security office and reviewed quarterly. Community feedback informs those reviews but never changes a published score automatically. Availability is determined by current Lehigh licensing, not by the tool's quality. Anything not already provisioned can be requested through the <a href="https://lehigh.atlassian.net/servicedesk/customer/portal/3/group/15/create/2429" target="_blank" rel="noopener">AI tool request form</a>, which covers both departmental purchases and the enhanced access funded by the H.S. Lee Family Foundation gift for graduate students and faculty. Last inventory review: <span id="luadv-reviewDate">DRAFT — pending InfoSec validation</span>.
-    <div class="export-row">
-      <button type="button" id="luadv-exportBtn">Download feedback log (JSON)</button>
-      <span class="n" id="luadv-fbCount"></span>
-    </div>
+    <strong>How the match score works.</strong> Each tool carries a capability profile per use case (0 to 100), blended with a data-handling fitness factor. Scores reflect the model tier and features in Lehigh's licensed configuration, not the vendor's frontier offering. Inventory and scores are maintained by the Information Security office and reviewed quarterly. Availability is determined by current Lehigh licensing, not by the tool's quality. Anything not already provisioned can be requested through the <a href="https://lehigh.atlassian.net/servicedesk/customer/portal/3/group/15/create/2429" target="_blank" rel="noopener">AI tool request form</a>, which covers both departmental purchases and the enhanced access funded by the H.S. Lee Family Foundation gift for graduate students and faculty. Last inventory review: <span id="luadv-reviewDate">DRAFT — pending InfoSec validation</span>.
   </div>
 
 </div>
@@ -836,63 +783,6 @@ const AA_SNAPSHOT = {
 
 const $ = id => document.getElementById(id);
 
-/* ---------- Feedback ----------
-   POC behavior: votes are held in memory and aggregated per
-   tool + use case + role. If artifact persistent storage is
-   available (window.storage), votes persist across sessions
-   and aggregate across users of this artifact. Standalone
-   deployment falls back to in-memory (resets on reload) —
-   production wiring is a one-endpoint job (Apps Script,
-   Qualtrics, or a campus microservice).
-   Feedback NEVER changes the governed score. It displays as a
-   community signal and exports for the quarterly review. */
-
-let FEEDBACK = { votes: [] };   /* each: {tool,useCase,role,dataClass,score,vote,ts} */
-let MY_VOTES = {};              /* key -> 'up'|'down', this session */
-const FB_KEY = "advisor-feedback-v1";
-const hasStore = typeof window !== "undefined" && window.storage && typeof window.storage.get === "function";
-
-async function fbLoad(){
-  if(!hasStore) return;
-  try{
-    const r = await window.storage.get(FB_KEY, true);
-    if(r && r.value) FEEDBACK = JSON.parse(r.value);
-  }catch(e){ /* no data yet */ }
-}
-async function fbSave(){
-  if(!hasStore) return;
-  try{ await window.storage.set(FB_KEY, JSON.stringify(FEEDBACK), true); }
-  catch(e){ console.error("feedback save failed", e); }
-}
-
-function fbTally(toolId, ucId){
-  const v = FEEDBACK.votes.filter(x=>x.tool===toolId && x.useCase===ucId);
-  const up = v.filter(x=>x.vote==="up").length;
-  return { n:v.length, up, pct: v.length ? Math.round(up/v.length*100) : null };
-}
-
-async function fbRecord(toolId, ucId, role, dcId, score, vote, key){
-  /* one vote per rec per session; changing your vote replaces it */
-  if(MY_VOTES[key]){
-    const idx = FEEDBACK.votes.findIndex(x=>x._k===key);
-    if(idx>-1) FEEDBACK.votes.splice(idx,1);
-  }
-  MY_VOTES[key]=vote;
-  FEEDBACK.votes.push({_k:key, tool:toolId, useCase:ucId, role, dataClass:dcId, score, vote, ts:new Date().toISOString()});
-  await fbSave();
-  render();
-}
-
-function fbExport(){
-  const clean = FEEDBACK.votes.map(({_k, ...rest})=>rest);
-  const blob = new Blob([JSON.stringify({exported:new Date().toISOString(), votes:clean},null,2)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "ai-advisor-feedback.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
 function fill(sel, items){
   items.forEach(i=>{
     const o=document.createElement("option");
@@ -1034,24 +924,6 @@ function render(){
         </div>
       </details>`;
 
-    const fbKey = `${t.id}|${uc}|${role}|${dc.id}`;
-    const tally = fbTally(t.id, uc);
-    const mine = MY_VOTES[fbKey];
-    const tallyHtml = tally.n
-      ? `<span class="tally"><strong>${tally.pct}%</strong> found this a good match (n=${tally.n})</span>`
-      : `<span class="tally">No feedback yet</span>`;
-    const svgUp = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h3zm0 0l4.2-7.4a1.8 1.8 0 0 1 3.3 1L13.5 8H19a2 2 0 0 1 2 2.4l-1.5 8A2 2 0 0 1 17.5 20H7"/></svg>`;
-    const svgDown = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 14V3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-3zm0 0l-4.2 7.4a1.8 1.8 0 0 1-3.3-1l1-4.4H5a2 2 0 0 1-2-2.4l1.5-8A2 2 0 0 1 6.5 4H17"/></svg>`;
-    const fbRow = gated ? `` : `
-      <div class="fb">
-        <span class="fb-q">Was this a good match for your work?</span>
-        <div class="fb-actions">
-          <button type="button" class="${mine==='up'?'on-up':''}" data-fb="up" data-key="${fbKey}" data-tool="${t.id}" data-score="${score}" aria-pressed="${mine==='up'}">${svgUp}<span>Yes</span></button>
-          <button type="button" class="${mine==='down'?'on-down':''}" data-fb="down" data-key="${fbKey}" data-tool="${t.id}" data-score="${score}" aria-pressed="${mine==='down'}">${svgDown}<span>No</span></button>
-          ${tallyHtml}
-        </div>
-      </div>`;
-
     div.innerHTML = `
       <div class="tool-top">
         <h4 class="tool-name">${t.name}</h4><span class="vendor">${t.vendor}</span>
@@ -1077,15 +949,9 @@ function render(){
             : `<p class="why">Available at Lehigh to ${roleList(t.eligible)}. Not available to your role.</p>`)
         : ``
       }
-      ${fbRow}
     `;
     box.appendChild(div);
 
-    div.querySelectorAll("[data-fb]").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        fbRecord(btn.dataset.tool, uc, role, dc.id, Number(btn.dataset.score), btn.dataset.fb, btn.dataset.key);
-      });
-    });
 
     requestAnimationFrame(()=>{
       requestAnimationFrame(()=>{
@@ -1096,17 +962,9 @@ function render(){
 }
 
 ["luadv-role","luadv-usecase","luadv-dataclass"].forEach(id=>$(id).addEventListener("change",render));
-$("luadv-exportBtn").addEventListener("click", fbExport);
 
-const _origRender = render;
-render = function(){
-  _origRender();
-  $("luadv-fbCount").textContent = FEEDBACK.votes.length
-    ? `${FEEDBACK.votes.length} vote${FEEDBACK.votes.length===1?"":"s"} recorded${hasStore ? "" : " (this session only — POC has no backend)"}`
-    : (hasStore ? "" : "POC: votes reset on reload — production needs a one-endpoint collector");
-};
 
-(async ()=>{ await fbLoad(); render(); })();
+render();
 </script>
 </div><!-- /.lu-advisor -->
 </body>

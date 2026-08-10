@@ -25,8 +25,6 @@ share no code.
 - Data classification is a hard gate (Lehigh 4-class framework, Class I–IV); capability never overrides contract.
 - Locked tools remain visible with full scores, surfacing licensing demand.
 - Match scores decompose into weighted, named factors per use case for auditability.
-- Community feedback (thumbs) is a separate signal and never adjusts governed scores.
-- Feedback is in-memory only in this POC; production requires a collector endpoint.
 
 ## Maintenance
 
@@ -87,8 +85,13 @@ either.
   are Class III + IV, so their absence understates what people may use.
 - **Every capability score is a placeholder**, drafted for plausibility and
   internal consistency, not measured. They have not been validated by anyone.
-- **Feedback is in-memory only.** Votes vanish on reload; production needs a
-  collector endpoint.
+- **There is no feedback channel.** A thumbs-up/down widget was removed: it
+  depended on `window.storage`, a Claude Artifacts API that does not exist on
+  GitHub Pages or in Drupal, so every save call was unreachable and votes were
+  discarded on reload. Worse, the tally read as a community aggregate while
+  counting one person's clicks in one page load. If a signal is wanted, it needs
+  a real collector — a Drupal webform endpoint, Qualtrics, or a campus
+  microservice — and the score must stay governed, never adjusted by votes.
 - **All request links point at one service desk form.** The form, not this page,
   explains what the H.S. Lee Family Foundation gift will fund.
 
