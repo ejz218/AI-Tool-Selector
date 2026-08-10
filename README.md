@@ -92,6 +92,68 @@ either.
 - **All request links point at one service desk form.** The form, not this page,
   explains what the H.S. Lee Family Foundation gift will fund.
 
+## Drupal implementation
+
+`index.html` is the source of truth and the standalone page. `drupal-fragment.html`
+is **generated** from it:
+
+```bash
+python3 build-fragment.py           # regenerate after editing index.html
+python3 build-fragment.py --check   # exit 1 if the fragment is stale
+```
+
+Never edit the fragment by hand. The sibling AI Risk Framework kept a
+hand-maintained Drupal copy and the two drifted apart; the generator exists so
+that cannot happen here. `--check` is cheap enough to run in CI.
+
+Paste the fragment using the **Full HTML** text format via the **source/code
+view** — CKEditor's visual editor strips `<style>` and `<script>`.
+
+**One decision on paste:** the widget's title is an `<h1>`, which suits the
+standalone page. A Drupal page supplies its own `<h1>`, so demote it to `<h2>`
+there to keep the heading order valid. Styling is class-based (`.adv-title`), so
+nothing else changes.
+
+### How it survives a CMS page
+
+- **Scoped.** Every rule is prefixed `.lu-advisor` and every id `luadv-`, so the
+  widget and the site theme cannot restyle each other. Verified in a harness
+  running real Bootstrap 5 plus Lehigh theme typography: the theme keeps its
+  20px paragraphs and visible `<details>` markers, and the widget keeps Dopis,
+  its own type scale, and its 44px targets.
+- **No asset dependencies.** No CDN stylesheets or scripts. Dopis loads from
+  lehigh.edu, which serves it with `Access-Control-Allow-Origin: *`. If those
+  legacy `~inis` URLs ever 404 the stacks fall back to Sora and then to the host
+  page's serif, so the page degrades rather than breaking.
+- **Sized by its container, not the viewport.** `container-type: inline-size`
+  plus `@container` queries, so a narrow content column stacks correctly even on
+  a wide screen — the case viewport media queries get wrong. Note that at-rule
+  selectors carry the `.lu-advisor` prefix too: container queries add no
+  specificity, so an unprefixed inner selector loses to the scoped base rule and
+  silently never applies.
+
+## Accessibility
+
+- **Control changes are announced.** `#luadv-resultsMeta` is a polite live region
+  reporting the scoring context and counts, e.g. *"Scored for: Researcher ·
+  Class III — 5 tools you can obtain, 4 blocked at this data classification."*
+  Without it, changing a control silently rewrites ten cards.
+- **Navigable by heading**, with no skipped levels: page title, then the Class I
+  alert and the recommendations heading, then a heading per availability group,
+  then one per tool. The first group's heading is screen-reader-only because
+  sighted users get it from the card styling.
+- **State is never colour alone.** Every card carries a text chip, and the
+  availability groups are separated by labelled rules that name the reason.
+- **Targets are at least 44px.** The score expander was 19px, which fails WCAG
+  2.2 AA (2.5.8, 24px minimum); the rest cleared AA but not the 44px comfort
+  target.
+- **Contrast checked, not assumed.** Use
+  `../AI_Safety_Framework/tools/check_contrast.py`. Two rules worth remembering:
+  Golden Hour fails as text on white (1.28:1) and is an accent only, and focus
+  rings need 3:1 against their own surface, so they are brown on light and gold
+  on the brown band.
+- The score bar is `aria-hidden` — it duplicates the score, which is already text.
+
 ## Styling
 
 Uses the official Lehigh brand system: Dopis for display type (self-hosted on
