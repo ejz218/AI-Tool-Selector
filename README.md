@@ -75,14 +75,16 @@ either.
 
 ## Known gaps
 
-- **`AA_SNAPSHOT` is not wired up.** Eight of ten entries are `null` and `asOf`
+- **`AA_SNAPSHOT` is not wired up.** Every entry is `null` and `asOf`
   is a placeholder. The Artificial Analysis reference below describes the intended
   model, not a live feed. If it is populated, do it server-side — the API key must
   never ship in this file.
-- **Inventory drift against the ITS table.** GitHub Copilot appears here but is
-  not on the table, and the table says to treat unlisted services as not approved.
-  DataCamp, LibreChat, and Sandbox are on the table but absent here — the first two
-  are Class III + IV, so their absence understates what people may use.
+- **Inventory drift against the ITS table, in one direction only.** Every tool
+  listed here is on the table. DataCamp, LibreChat, and Sandbox are on the table
+  but absent here — DataCamp is Class II with exclusions and LibreChat is
+  Class III + IV, so their absence understates what people may use. GitHub
+  Copilot was removed precisely because it was the drift in the other direction:
+  present here, absent from the table.
 - **Every capability score is a placeholder**, drafted for plausibility and
   internal consistency, not measured. They have not been validated by anyone.
 - **There is no feedback channel.** A thumbs-up/down widget was removed: it
@@ -145,9 +147,9 @@ No single role/class combination shows all four at once — check two:
 | **Staff / Class III** | available, requestable, blocked at this data classification |
 
 Staff is the useful role because it is the only one both excluded from something
-(GitHub Copilot, Keenious) and eligible for the purchased tools. Those two
-excluded tools are Class IV only, so at Class III they read as *blocked* rather
-than *not available* — which is why the fourth state needs the second view.
+(Keenious) and eligible for the purchased tools. Keenious is Class IV only, so at
+Class III it reads as *blocked* rather than *not available* — which is why the
+fourth state needs the second view.
 
 ## Accessibility
 

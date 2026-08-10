@@ -684,18 +684,6 @@ const TOOLS = [
     scores:{ writing:[72,74,92], coding:[66,68,60], data:[70,74,86], litreview:[56,52,64], study:[62,58,58], course:[60,58,76], meetings:[78,76,90], image:[55,50,62], admin:[70,72,94] }
   },
   {
-    id:"ghcopilot",
-    name:"GitHub Copilot",
-    vendor:"GitHub Education",
-    roles:["ugrad","grad","faculty"],
-    eligible:["ugrad","grad","faculty"],
-    ceiling:1,
-    basis:"Purpose-built coding assistant living inside the editor with full repo context. Dominant for its one job; near zero transfer to any other use case.",
-    guard:"UNDER REVIEW by Information Security. Not yet approved for any confidential data — Class IV (public) only. Do not use on repositories containing Class I, II, or III data, including export-controlled code (ITAR/EAR is Class II).",
-    request:REQUEST_FORM,
-    scores:{ writing:[20,20,25], coding:[94,96,88], data:[55,60,45], litreview:[10,8,12], study:[45,40,50], course:[15,12,18], meetings:[5,5,5], image:[5,5,5], admin:[40,35,45] }
-  },
-  {
     id:"zoomai",
     name:"Zoom AI Companion",
     vendor:"Zoom, Lehigh tenant",
@@ -770,8 +758,9 @@ const AA_SNAPSHOT = {
     notebooklm: { model:"Gemini-backed",           index:null },
     claude:     { model:"Claude (Enterprise tier)",index:null },
     copilot:    { model:"GPT-class (M365 tier)",   index:null },
-    ghcopilot:  { model:"Multiple (Copilot)",      index:null },
     zoomai:     { model:"Zoom federated models",   index:null },
+    chatgpt:    { model:"GPT-class (Business)",    index:null },
+    keenious:   { model:"Not an LLM (retrieval)",  index:null },
     firefly:    { model:"Firefly Image (non-LLM)", index:null }
   }
 };
